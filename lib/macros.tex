@@ -1,0 +1,50 @@
+% real and imaginary components
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+
+% Fourier transforms
+\newcommand\fourier[1]{\frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty #1 e^{-i\omega x} \mathrm{d}x}
+\newcommand\inverseFourier[1]{\frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty #1 e^{i\omega x} \mathrm{d}\omega}
+
+% derivatives
+\newcommand{\ppf}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pppf}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3}}
+\newcommand{\ddf}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\newcommand{\DDf}[2]{\frac{\mathrm{D} #1}{\mathrm{D} #2}}
+
+% norms
+\newcommand\norm[1]{\lVert#1\rVert}
+
+% units notation in math mode
+\newcommand{\unit}[1]{\ensuremath{\, \mathrm{#1}}}
+
+% number just one equation in an un-numbered align* environment
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+% nomenclature environment
+
+
+% MATLAB listings environment
+\lstnewenvironment{MATLAB}
+{\lstset{
+    style=Matlab-editor,
+    backgroundcolor=\color{xkcdPale},
+    basicstyle=\ttm
+    }}
+{}
+
+% designate ./figs/ as the root directory for graphics
+\graphicspath{{./figs/}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% COMMONLY USED COPYPASTAS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% CODE BLOCK
+
+% \begin{MATLAB}[caption={MATLAB script},label={code:p1}]
+% for i = 1:n
+%     disp('string')
+% end
+% \end{MATLAB}
+% Code block \ref{code:p1}

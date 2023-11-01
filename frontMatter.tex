@@ -1,0 +1,85 @@
+%
+% ----- copyright and title pages
+%
+\Title{Modeling and Control of Active Aeroservoelastic Systems}
+\Author{Anthony Su}
+\Year{2023}
+\Program{William E. Boeing Department of Aeronautics \& Astronautics}
+
+\Chair{Name of Chairperson}{Title of Chair}{William E. Boeing Department of Aeronautics \& Astronautics}
+\Signature{First committee member}
+\Signature{Next committee member}
+\Signature{etc}
+
+\copyrightpage
+
+\titlepage
+
+%
+% ----- abstract
+%
+\setcounter{page}{-1}
+\abstract{
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et maximus tortor, eget congue lectus. Suspendisse quis sodales mi. In faucibus libero vel condimentum ornare. Suspendisse a erat porta justo suscipit porttitor at et magna. Duis vitae egestas eros. Curabitur enim ex, tempus et nunc eget, interdum convallis nisi. In hac habitasse platea dictumst. Curabitur a nisl non turpis fermentum tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Curabitur euismod molestie nulla, non molestie sem hendrerit vel. Pellentesque dapibus vulputate urna et dignissim. Morbi condimentum, velit quis fermentum faucibus, velit tellus scelerisque enim, a feugiat quam nulla in enim. Duis sed neque eget lorem condimentum varius vitae quis magna. Cras viverra posuere lorem, in fermentum leo porta a. Nam accumsan neque ut pretium volutpat.
+}
+ 
+%
+% ----- contents & etc.
+%
+\tableofcontents
+\listoffigures
+\listoftables
+ 
+%
+% ----- glossary 
+%
+\chapter*{Nomenclature}
+\addcontentsline{toc}{chapter}{Nomenclature}
+\thispagestyle{plain}
+%
+{\renewcommand\arraystretch{1.0}
+\noindent\begin{longtable}{@{}l @{\quad=\quad} l@{}}
+\multicolumn{2}{@{}l}{\textbf{Abbreviations}} \\
+    FEA         & finite element analysis \\
+    FRF         & frequency response function \\
+    GLA         & gust load alleviation \\
+    GVT         & ground vibration testing \\
+    HIL         & hardware-in-the-loop \\
+    LE          & leading edge \\
+    MARGE       & Model for Aeroelastic Response to Gust Excitation \\
+    % RFA         & rational function approximation \\
+    TE          & trailing edge \\
+    
+\multicolumn{2}{@{}l}{\textbf{Variables}} \\
+    $b$         & reference semi-chord \\
+    $j$         & imaginary unit
+    $k$         & reduced frequency \\
+    $s$         & Laplace variable \\
+
+\multicolumn{2}{@{}l}{\textbf{Subscripts}} \\
+    $s$         & structural (flexible) component \\
+    $c$         & control (rigid) component \\
+    $p$         & plant \\
+    act         & actuator \\
+    sens        & sensor \\
+    
+\multicolumn{2}{@{}l}{\textbf{Notation}} \\
+    $[\quad]$   & matrix \\
+    $\{\quad\}$ & column vector
+    
+\end{longtable}}
+ 
+%
+% ----- acknowledgments
+%
+\acknowledgments{
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed erat vehicula elit sollicitudin ultrices at nec ligula. Sed non massa eget nibh pellentesque dapibus non at ante. Integer augue lacus, tincidunt vel sollicitudin fringilla, accumsan vitae lorem. Nunc eleifend scelerisque consectetur. Etiam justo nibh, hendrerit nec mattis non, tincidunt lacinia augue. Morbi ac enim hendrerit, iaculis ante eget, tincidunt massa. Morbi at justo sapien. Donec pulvinar urna id orci sodales, in ornare dolor venenatis. Quisque rutrum mi ac ornare tincidunt.
+}
+
+%
+% ----- dedication
+%
+\dedication{\begin{center}to Lorem Ipsum, my dear friend\end{center}}
+
+%
+% end of the preliminary pages

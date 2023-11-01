@@ -1,0 +1,65 @@
+\documentclass [11pt, proquest] {uwthesis}[2020/02/24]
+\input{lib/packages}
+\input{lib/macros}
+
+\begin{document}
+
+% ==========--------------======================================
+% ========== FRONT MATTER ======================================
+% ==========--------------======================================
+\prelimpages
+\include{frontMatter}
+
+% ==========-------------=======================================
+% ========== MAIN MATTER =======================================
+% ==========-------------=======================================
+\textpages
+
+% ========== Introduction ======================================
+\include{content/introduction}
+
+% ========== System Description ================================
+\include{content/sysDescription}
+
+% ========== System Modeling ===================================
+\include{content/sysModeling}
+
+% ========== Ground Vibration Testing ==========================
+\include{content/nastran        }
+
+% ========== Ground Vibration Testing ==========================
+\include{content/gvt}
+
+% ========== Wind Tunnel =======================================
+\include{content/windTunnel}
+
+% ========== Results ===========================================
+\include{content/results}
+
+% ========== Conclusion ========================================
+\include{content/conclusion}
+
+
+% ==========--------------======================================
+% ========== BIBLIOGRAPHY ======================================
+% ==========--------------======================================
+\nocite{*}   % include everything in the uwthesis.bib file
+\bibliographystyle{plain}
+\bibliography{uwthesis}
+
+% ==========------------========================================
+% ========== APPENDICES ========================================
+% ==========------------========================================
+\appendix
+\raggedbottom\sloppy
+
+% ========== APPENDIX A ========================================
+\include{content/appendixA}
+
+% ==========------------------==================================
+% ========== CURRICULUM VITAE ==================================
+% ==========------------------==================================
+
+% \input{CV}
+
+\end{document}

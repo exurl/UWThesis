@@ -1,0 +1,31 @@
+\chapter{Finite Element Modeling}
+\label{ch:nastran}
+
+An aeroelastic finite element model of MARGE was previously constructed using NASTRAN. The model captures MARGE, the wind tunnel test section walls, and the gust vanes.
+
+% The structural model was constructed from classical beam elements and point masses. The 
+
+The wing structure and tail structure were each modeled as a single chain of Euler-Bernoulli beam elements along their respective spar.
+
+The area moments of inertia of the beam elements in the finite element model are reported in Table \ref{tab:beamInertia}.
+\begin{table}[H]
+    \centering
+    \caption{Area moment of inertia of beam finite elements}
+    \begin{tabular}{cccc}
+        \hline\hline
+                  & $I_1$, m$^4$          & $I_2$, m$^4$         & $J$, m$^4$           \\
+        \hline
+        wing spar & $2.541\times10^{-11}$ & $5.853\times10^{-8}$ & $5.856\times10^{-8}$ \\
+        tail spar & $1.829\times10^{-9}$  & $1.301\times10^{-8}$ & $1.484\times10^{-8}$ \\
+        fuselage  & $7.452\times10^{-11}$ & $4.476\times10^{-9}$ & $4.550\times10^{-9}$ \\
+        rigid     & $2.541\times10^{-11}$ & $5.853\times10^{-8}$ & $5.856\times10^{-8}$ \\
+        \hline\hline
+    \end{tabular}
+    \label{tab:beamInertia}
+\end{table}
+
+The aerodynamic loads on the NASTRAN model are based on the doublet-lattice model (DLM) of aerodynamics. This linear aerodynamic model assumes incompressible, inviscid, irrotational flow around thin lifting surfaces. The loads were transferred from the aerodynamic panels to the structural elements with NASTRAN
+
+ The loads on the finite element model were determined using doublet-lattice lifting surface theory which is <insert>
+ 
+ The loads on the aerodynamic panels were transferred to the structural nodes via a spline interpolation.
