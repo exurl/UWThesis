@@ -2,22 +2,36 @@
 \label{ch:sysModeling}
 
 The goal of this section is to obtain a preliminary state-space model for the aeroservoelastic system in the form
-\begin{align}
-    \{\dot{x}\} &= [A] \{x\} + [B]\{u\} \\
-    \{y\} &= [C] \{x\} + [D] \{u\}
-\end{align}
+\begin{equation}
+	\begin{aligned}
+    		\{\dot{x}\} &= [A] \{x\} + [B]\{u\} \\
+	    \{y\} &= [C] \{x\} + [D] \{u\}
+	\end{aligned}
+\end{equation}
 based on first principles.
 
 % +----------------------------------------------------------------------------+
-% | EQUATIONS OF MOTION                                                        |
+% | PLANT DYNAMICS                                                             |
 % +----------------------------------------------------------------------------+
-\section{Equations of Motion}
+\section{Plant Dynamics}
 
-The equations of motion for the general structural dynamic system with damping and forcing in the Laplace domain are
+This section will derive the plant dynamics for MARGE in the form
+\begin{align}
+	\label{eq:ssPlant}
+	\{\dot{x}\} = [A_p]\{x\}+[B_p]\{u\}
+\end{align}
+
+% STRUCTURAL DYNAMICS ----------------------------------------------------------
+\subsection{Structural Dynamics}
+
+The equations of motion for the linear, second-order structural dynamic system with damping and forcing in the Laplace domain are
 \begin{align}
     s^2 [M] \{q(s)\} + s [C] \{q(s)\} + [K] \{q(s)\} &= \{f(s)\}
 \end{align}
-where $\{q\}$ is the state expressed in the generalized modal coordinates, $\{f(s)\}$ is the generalized external forcing, and $[M]$, $[C]$, and $[K]$ are generalized mass, damping, and stiffness matrices respectively. Note that the modal coordinates include both elastic motions (of the structure) and rigid-body motions (of the structure and the control surfaces).
+where $\{q\}$ is the structural dynamic state expressed in the generalized modal coordinates, $\{f(s)\}$ is the generalized external forcing, and $[M]$, $[C]$, and $[K]$ are generalized mass, damping, and stiffness matrices respectively. Note that the modal coordinates include both elastic motions (of the structure) and rigid-body motions (of the structure and the control surfaces):
+\begin{align}
+    \{q\} = \begin{Bmatrix} q_{s} \\ q_{c} \end{Bmatrix}
+\end{align}
 % The mass matrix, and stiffness matrix, and the mode shapes corresponding to $\{q\}$ are obtained from the NASTRAN model.
 
 % The forcing for the aeroservoelastic wing can be decomposed into the aerodynamic forcing due to the state, the aerodynamic forcing due to gusts, and the forcing from actuator hinge moments:
@@ -30,7 +44,7 @@ The forcing for the aeroservoelastic wing can be decomposed into the aerodynamic
 \end{align}
 where $[A(s)]$ is the aerodynamic influence matrix for the state and ${H_c}$ is the hinge moment's influence.
 
-The whole system can be further decomposed into structural and control modes:
+The whole system can be further decomposed into structural and control components:
 \begin{multline}
     \left( s^2 \begin{bmatrix}
         [M_{ss}] & [M_{sc}] \\
@@ -84,8 +98,9 @@ It is assumed that the dynamics of the control modes are completely determined b
     % \end{bmatrix} \frac{w_G}{U}
 \end{multline}
 
-Note that since the control modes are rigid-body modes, they have no stiffness ($[K_{cc}]$, $[K_{sc}]$, and $[K_{cs}]$ are zero) and the equations of motion further simplify to
+Note that since the control modes are rigid-body modes, they have no stiffness and the equations of motion further simplify to
 \begin{multline}
+	\label{eq:EOM}
     \left( s^2 \begin{bmatrix}
         [M_{ss}] & [M_{sc}]
     \end{bmatrix} + s \begin{bmatrix}
@@ -106,31 +121,128 @@ Note that since the control modes are rigid-body modes, they have no stiffness (
     % \end{bmatrix} \frac{w_G}{U}
 \end{multline}
 
-% +----------------------------------------------------------------------------+
-% | THE ROGER APPROXIMATION                                                    |
-% +----------------------------------------------------------------------------+
-\section{The Roger Approximation}
+% THE ROGER APPROXIMATION ------------------------------------------------------
+\subsection{The Roger Approximation}
 
 % The aerodynamic influence matrices $[A]$ and $[A_G]$ are nonlinear functions of frequency. In order to obtain a linear state-space system, these must be approximated as analytic functions of $s$.
 The aerodynamic influence matrix $[A]$ is a nonlinear function of reduced frequency $k$. In order to obtain a linear state-space system, it must be approximated as an analytic function of $k$.
 
 The Roger approximation \cite{Roger1977} is a method of generating a rational function approximation of the aerodynamic influence matrix in the form
 \begin{align}
+	\label{eq:RogerApprox}
     [A(jk)] &\approx [\bar{P}_0] + jk [\bar{P}_1] + (jk)^2 [\bar{P}_2] + \sum_{n=1}^{N_\text{lag}} \frac{jk}{jk+\bar{\beta}_n} [\bar{P}_{n+2}]
 \end{align}
-where $[P]$ are the unknown real-valued matrices that are fit to the tabulated matrices. Aside from the zeroth, first, and second order terms, there are $N_\text{lag}$ additional "lag term" approximating functions which are defined by their respective constants $\bar{\beta}$. The constants $\bar{\beta}$ are pre-determined
+where $[P]$ are the unknown real-valued matrices that are fit to the tabulated matrices. Aside from the zeroth, first, and second order terms, there are $N_\text{lag}$ additional ``lag term'' approximating functions which are defined by their respective constants $\bar{\beta}$.
 
-Given a tabulated set of known aerodynamic influence matrices across a range of reduced frequencies $k$,
+Given a tabulated set of known aerodynamic influence matrices $[A]$ (obtained from an unsteady aerodynamic solver such as that found in NASTRAN) across $N$ reduced frequencies, each entry $p$ of the matrices $[P]$ in the above approximation can be fit to the corresponding entries $a$ of the aerodynamic influence matrices $[A]$ through a linear regression:
+\begin{align}
+	\label{eq:RogerRegression}
+    \begin{bmatrix}
+        0 & -k_1^2 & \frac{k_1^2}{k_1^2 + \bar{\beta}_1^2} & \dots & \frac{k_1^2}{k_1^2 + \bar{\beta}_{N_\text{lag}}^2} \\
+	    k_1 & 0 & \frac{k_1 \bar{\beta}_1}{k_1^2 + \bar{\beta}_1^2} & \dots & \frac{k_1 \bar{\beta}_1}{k_1^2 + \bar{\beta}_{N_\text{lag}}^2} \\
+	    \vdots & \vdots & \vdots & & \vdots \\
+        0 & -k_N^2 & \frac{k_N^2}{k_N^2 + \bar{\beta}_1^2} & \dots & \frac{k_N^2}{k_N^2 + \bar{\beta}_{N_\text{lag}}^2} \\
+	    k_N & 0 & \frac{k_N \bar{\beta}_1}{k_N^2 + \bar{\beta}_1^2} & \dots & \frac{k_N \bar{\beta}_1}{N^2 + \bar{\beta}_{N_\text{lag}}^2}	    
+    \end{bmatrix}
+    \begin{Bmatrix} \bar{p}_1 \\ \vdots \\ \bar{p}_{N_\text{lag}+2} \end{Bmatrix}
+    &=
+    \begin{Bmatrix}
+	    \Re(a(jk_1)) - a(0) \\
+	    \Im(a(jk_1)) \\
+	    \vdots \\
+	    \Re(a(jk_N)) - a(0) \\
+	    \Im(a(jk_N))	    
+    \end{Bmatrix}
+\end{align}
+where the steady-state component of the approximation $[P_0]$ is fixed to be equal to the steady-state aerodynamic influence matrix (with zero reduced frequency):
+\begin{align}
+    [\bar{P}_0] &= [A(k=0)]
+\end{align}
+The linear regression in Eq. \ref{eq:RogerRegression} can then be solved using the method of least-squares to obtain the fitted $[\bar{P}]$ matrices.
+% With these matrices, Eq. \ref{eq:RogerApprox} is a known rational approximation for the aerodnyamic influence matrices across the tabulated natural frequencies. Replacing the aerodynamic influence matrices in Eq. \ref{eq:EOM} yields a fully linear model for structural dynamics of MARGE.
 
+Replacing the reduced frequency with the equivalent angular frequency yields
+\begin{align}
+	[A(j\omega)] = [P_0] + j\omega [P_1] - \omega^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{j\omega}{j\omega+\beta_n} [P_{n+2}]
+\end{align}
+where
+\begin{equation}
+\begin{aligned}
+	[P_0] &= [\bar{P}_0] \\
+	[P_1] &= [\bar{P}_1] \frac{b}{U} \\
+	[P_2] &= [\bar{P}_2] \left(\frac{b}{U}\right)^2 \\
+	[P_3] &= [\bar{P}_3] \\
+	&\vdots \\
+	[P_{N_\text{lag}+2}] &= 	[\bar{P}_{N_\text{lag}+2}] \\
+	\beta_1 &= \bar{\beta}_1 \frac{U}{b} \\
+	&\vdots \\
+	\beta_{N_\text{lag}} &= \bar{\beta}_{N_\text{lag}} \frac{U}{b}
+\end{aligned}
+\end{equation}
+This can be extended from the imaginary exis to the full Laplace domain with analytic continuation, leading to the final form of the Roger approximation for aerodynamic influence matrices:
+\begin{align}
+	[A(s)] = [P_0] + s [P_1] + s^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{n+2}]
+\end{align}
 
+% COUPLED AEROELASTIC DYNAMICS -------------------------------------------------
+\subsection{Coupled Aeroelastic Dynamics}
 
-For the $(1,1)$ element of an aerodynamic influence matrix $[A]$
+This section describes how the structural dynamic equations of motion can be reduced to the form in Eq. \ref{eq:ssPlant}.
+
+Replacing the aerodynamic influence matrices in Eq. \ref{eq:EOM} with the equivalent Roger approximation and collecting like terms yields
+\begin{multline}
+	\label{eq:EOMwRoger}
+	\left( s^2 [M_{ss}] + s [C_{ss}] + [K_{ss}]
+	- q_D \left( [P_{ss0}] + s[P_{ss1}] + s^2 [P_{ss2}] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{ss,n+2}] \right) \right) \{ q_s(s)\} \\
+	=
+	- \left( s^2 [M_{sc}] + s [C_{sc}] - q_D \left( [P_{sc0}] + s [P_{sc1}] + s^2 [P_{sc2}] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{sc,n+2}] \right) \right) \{q_c(s)\}
+\end{multline}
+
+Define the following coupled aeroelastic matrices:
+\begin{equation}
+\begin{aligned}
+	\left[\bar{\bar{M}}\right] &= [M] - q_D [P_2] \\
+	\left[\bar{\bar{C}}\right] &= [C] - q_D [P_1] \\
+	\left[\bar{\bar{K}}\right] &= [K] - q_D [P_0]
+\end{aligned}
+\end{equation}
+Equation \ref{eq:EOMwRoger} then simplifies to
+\begin{multline}
+	\left( s^2 \left[\bar{\bar{M}}_{ss}\right] + s \left[\bar{\bar{C}}_{ss}\right] + \left[\bar{\bar{K}}_{ss}\right] \right) \{ q_s(s)\}
+	- q_D \left(\sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{ss,n+2}] \right) \{ q_s(s)\} \\
+	=
+	- \left( s^2 \left[\bar{\bar{M}}_{sc}\right] + s \left[\bar{\bar{C}}_{sc}\right] \right) \{q_c(s)\} + q_D \left(\sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{sc,n+2}] \right) \{q_c(s)\}
+\end{multline}
+Rearranging the lag terms,
+\begin{multline}
+	\left( s^2 \left[\bar{\bar{M}}_{ss}\right] + s \left[\bar{\bar{C}}_{ss}\right] + \left[\bar{\bar{K}}_{ss}\right] \right) \{ q_s(s)\}
+	\\
+	- q_D \begin{bmatrix}
+		\sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{ss,n+2}] &
+		\sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{sc,n+2}] &
+	\end{bmatrix} \begin{Bmatrix} q_s(s) \\ q_c(s) \end{Bmatrix}
+	\\
+	= - \left( s^2 \left[\bar{\bar{M}}_{sc}\right] + s \left[\bar{\bar{C}}_{sc}\right] \right) \begin{Bmatrix} q_c(s) \end{Bmatrix}
+\end{multline}
+
+Define the following ``lag states'':
+\begin{align}
+	\{r_1\} &= \begin{bmatrix} [P_{ss3}] & [P_{sc3}] \end{bmatrix} \frac{s}{s+\beta_1}
+	&\vdots \\
+	&=
+\end{align}
+
 
 % +----------------------------------------------------------------------------+
 % | OUTPUT MODELING                                                            |
 % +----------------------------------------------------------------------------+
 \section{Output Modeling}
 
+This section will derive the output equations for MARGE in the form
+\begin{align}
+	\{\dot{y}\} = [C_p]\{x\}+[D_p]\{u\}
+\end{align}
+The output of MARGE consists of three accelerometers, one strain gauge, and one pitch sensor.
 
 % +----------------------------------------------------------------------------+
 % | ACTUATION AND SENSING DYNAMICS                                             |
