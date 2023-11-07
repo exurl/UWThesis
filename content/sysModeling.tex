@@ -4,7 +4,7 @@
 The goal of this section is to obtain a preliminary state-space model for the aeroservoelastic system in the form
 \begin{equation}
 	\begin{aligned}
-    		\{\dot{x}\} &= [A] \{x\} + [B]\{u\} \\
+    		s \{x\} &= [A] \{x\} + [B]\{u\} \\
 	    \{y\} &= [C] \{x\} + [D] \{u\}
 	\end{aligned}
 \end{equation}
@@ -18,7 +18,7 @@ based on first principles.
 This section will derive the plant dynamics for MARGE in the form
 \begin{align}
 	\label{eq:ssPlant}
-	\{\dot{x}\} = [A_p]\{x\}+[B_p]\{u\}
+	s \{x\} = [A_p]\{x_p\}+[B_p]\{u_p\}
 \end{align}
 
 % STRUCTURAL DYNAMICS ----------------------------------------------------------
@@ -184,6 +184,12 @@ This can be extended from the imaginary exis to the full Laplace domain with ana
 	[A(s)] = [P_0] + s [P_1] + s^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{n+2}]
 \end{align}
 
+It should be noted that the Roger approximation is only valid over the tabulated reduced frequency range. Thus, any result from the model is only valid if the airspeed that the model ia analyzed at is sufficiently above
+\begin{align}
+	U_\text{min} &= \frac{\omega_\text{max} \cdot b}{k_\text{max}}
+\end{align}
+where $\omega_\text{max}$ is the maximum frequency of interest in the analysis. Thus, this model which incorporates the Roger Approximation cannot be used for purely structural dynamic analysis (where $U=0$).
+
 % COUPLED AEROELASTIC DYNAMICS -------------------------------------------------
 \subsection{Coupled Aeroelastic Dynamics}
 
@@ -193,9 +199,9 @@ Replacing the aerodynamic influence matrices in Eq. \ref{eq:EOM} with the equiva
 \begin{multline}
 	\label{eq:EOMwRoger}
 	\left( s^2 [M_{ss}] + s [C_{ss}] + [K_{ss}]
-	- q_D \left( [P_{ss0}] + s[P_{ss1}] + s^2 [P_{ss2}] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{ss,n+2}] \right) \right) \{ q_s(s)\} \\
+	- q_D \left( [P_{ss,0}] + s[P_{ss,1}] + s^2 [P_{,2}] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{ss,n+2}] \right) \right) \{ q_s(s)\} \\
 	=
-	- \left( s^2 [M_{sc}] + s [C_{sc}] - q_D \left( [P_{sc0}] + s [P_{sc1}] + s^2 [P_{sc2}] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{sc,n+2}] \right) \right) \{q_c(s)\}
+	- \left( s^2 [M_{sc}] + s [C_{sc}] - q_D \left( [P_{sc,0}] + s [P_{sc,1}] + s^2 [P_{sc,2}] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{sc,n+2}] \right) \right) \{q_c(s)\}
 \end{multline}
 
 Define the following coupled aeroelastic matrices:
@@ -211,10 +217,11 @@ Equation \ref{eq:EOMwRoger} then simplifies to
 	\left( s^2 \left[\bar{\bar{M}}_{ss}\right] + s \left[\bar{\bar{C}}_{ss}\right] + \left[\bar{\bar{K}}_{ss}\right] \right) \{ q_s(s)\}
 	- q_D \left(\sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{ss,n+2}] \right) \{ q_s(s)\} \\
 	=
-	- \left( s^2 \left[\bar{\bar{M}}_{sc}\right] + s \left[\bar{\bar{C}}_{sc}\right] \right) \{q_c(s)\} + q_D \left(\sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{sc,n+2}] \right) \{q_c(s)\}
+	- \left( s^2 \left[\bar{\bar{M}}_{sc}\right] + s \left[\bar{\bar{C}}_{sc}\right] + \left[\bar{\bar{K}}_{sc}\right] \right) \{q_c(s)\} + q_D \left(\sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{sc,n+2}] \right) \{q_c(s)\}
 \end{multline}
 Rearranging the lag terms,
 \begin{multline}
+	\label{eq:EOMcoupled}
 	\left( s^2 \left[\bar{\bar{M}}_{ss}\right] + s \left[\bar{\bar{C}}_{ss}\right] + \left[\bar{\bar{K}}_{ss}\right] \right) \{ q_s(s)\}
 	\\
 	- q_D \begin{bmatrix}
@@ -222,39 +229,312 @@ Rearranging the lag terms,
 		\sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{sc,n+2}] &
 	\end{bmatrix} \begin{Bmatrix} q_s(s) \\ q_c(s) \end{Bmatrix}
 	\\
-	= - \left( s^2 \left[\bar{\bar{M}}_{sc}\right] + s \left[\bar{\bar{C}}_{sc}\right] \right) \begin{Bmatrix} q_c(s) \end{Bmatrix}
+	= - \left( s^2 \left[\bar{\bar{M}}_{sc}\right] + s \left[\bar{\bar{C}}_{sc}\right] + \left[ \bar{\bar{K}}_{sc} \right] \right) \begin{Bmatrix} q_c(s) \end{Bmatrix}
 \end{multline}
 
-Define the following ``lag states'':
-\begin{align}
-	\{r_1\} &= \begin{bmatrix} [P_{ss3}] & [P_{sc3}] \end{bmatrix} \frac{s}{s+\beta_1}
+Define the following aerodynamic ``lag states'' as
+\begin{equation}
+\begin{aligned}
+	\{r_1\} &= \begin{bmatrix} [P_{ss,3}] & [P_{sc,3}] \end{bmatrix} \frac{s}{s+\beta_1} \\
 	&\vdots \\
-	&=
+	\{r_{N_\text{lag}}\} &= \begin{bmatrix} [P_{ss,N_\text{lag}+2}] & [P_{sc,N_\text{lag}+2}] \end{bmatrix} \frac{s}{s+\beta_{N_\text{lag}}}
+\end{aligned}
+\end{equation}
+Rearranging this yields an expression for the rates of the lag states:
+\begin{equation}
+\begin{aligned}
+	s \{r_1\} &= s [P_{ss,3}] \{q_s(s)\} + s [P_{sc,3}] \{q_c(s)\} - \beta_1 \{r_1\} \\
+	&\vdots \\
+	s \{r_{N_\text{lag}}\} &= s [P_{ss,N_\text{lag}+2}] \{q_s\} + s [P_{sc,N_\text{lag}+2}] \{q_c\} - \beta_{N_\text{lag}} \{r_{N_\text{lag}}\}
+\end{aligned}
+\end{equation}
+Combining these lag state dynamic equations into a single matrix equation yields
+\begin{align}
+	\label{eq:lagDynamics}
+	s\{r\} &= s [B_{rs}] \{q_s\} + s [B_{rc}] \{q_c\} + [A_r] \{r\}
+\end{align}
+where $\{r\}$, $[B_{rs}]$, $[B_{rc}]$, and $[A_r]$ are defined as
+\begin{equation}
+\begin{aligned}
+	\{r\} &= \begin{Bmatrix} \{r_1\} \\ \vdots \\ \{r_{N_\text{lag}}\} \end{Bmatrix} \\
+	[B_{rs}] &= \begin{bmatrix} [P_{ss,3}] \\ \vdots \\ [P_{ss,N_\text{lag}+2}] \end{bmatrix} \\
+	[B_{rc}] &= \begin{bmatrix} [P_{sc,3}] \\ \vdots \\ [P_{sc,N_\text{lag}+2}] \end{bmatrix}	\\
+	[A_r] &= \begin{bmatrix}
+	-\beta_1 [I] & & \\
+	& \ddots & \\
+	& & -\beta_{N_\text{lag}} [I]
+	\end{bmatrix}
+\end{aligned}
+\end{equation}
+
+With the lag states defined, Eq.\ref{eq:EOMcoupled} can now be rewritten as
+\begin{multline}
+	\label{eq:EOMcoupled2}
+	\left( s^2 \left[\bar{\bar{M}}_{ss}\right] + s \left[\bar{\bar{C}}_{ss}\right] + \left[\bar{\bar{K}}_{ss}\right] \right) \{ q_s(s)\}
+	- q_D \sum_{n=1}^{N_\text{lag}} \{r_n\}
+	\\
+	= - \left( s^2 \left[\bar{\bar{M}}_{sc}\right] + s \left[\bar{\bar{C}}_{sc}\right] + \left[\bar{\bar{K}}_{sc}\right] \right) \begin{Bmatrix} q_c(s) \end{Bmatrix}
+\end{multline}
+The sum of lag states can be simplifed introducing the matrix $[I_r]$ such that
+\begin{align}
+	\{r_1\} + \dots + \{r_{N_\text{lag}}\}
+	&= \begin{bmatrix} [I] & \dots & [I] \end{bmatrix} \begin{Bmatrix} \{r_1\} \\ \vdots \\ \{r_{N_\text{lag}}\} \end{Bmatrix} = [I_r] \{r\}
+\end{align}
+This further compacts the Eq. \ref{eq:EOMcoupled2}, which becomes
+\begin{multline}
+	\label{eq:EOMcoupled3}
+	\left( s^2 \left[\bar{\bar{M}}_{ss}\right] + s \left[\bar{\bar{C}}_{ss}\right] + \left[\bar{\bar{K}}_{ss}\right] \right) \{ q_s(s)\}
+	- q_D [I_r] \{r\}
+	\\
+	= - \left( s^2 \left[\bar{\bar{M}}_{sc}\right] + s \left[\bar{\bar{C}}_{sc}\right] + \left[\bar{\bar{K}}_{sc}\right] \right) \begin{Bmatrix} q_c(s) \end{Bmatrix}
+\end{multline}
+
+Define new structural dynamic state vectors as
+\begin{align}
+	\{x_1\} &= \{q\} \\
+	\{x_2\} &= s \{q\}
+\end{align}
+Using these, Eq. \ref{eq:EOMcoupled3} can be rewritten as a first-order linear ODE for $\{x_2\}$:
+\begin{multline}
+	s \{x_2\} = - \left[\bar{\bar{M}}_{ss}\right]^{-1} \left[\bar{\bar{C}}_{ss}\right] \{x_2\}
+	- \left[\bar{\bar{M}}_{ss}\right]^{-1} \left[\bar{\bar{K}}_{ss}\right] \{x_1\}
+	+ q_D \left[\bar{\bar{M}}_{ss}\right]^{-1} [I_r] \{r\}
+	\\
+	- \left[\bar{\bar{M}}_{ss}\right]^{-1} \left( s^2 \left[\bar{\bar{M}}_{sc}\right] + s \left[\bar{\bar{C}}_{sc}\right] + \left[\bar{\bar{K}}_{sc}\right] \right) \begin{Bmatrix} q_c(s) \end{Bmatrix}
+\end{multline}
+Rearranging,
+\begin{multline}
+	\label{eq:EOMcoupled4}
+	s\{x_2\} = - \left[\bar{\bar{M}}_{ss}\right]^{-1} \left[\bar{\bar{C}}_{ss}\right] \{x_2\}
+	- \left[\bar{\bar{M}}_{ss}\right]^{-1} \left[\bar{\bar{K}}_{ss}\right] \{x_1\}
+	\\
+	+ q_D \left[\bar{\bar{M}}_{ss}\right]^{-1} [I_r] \{r\}
+	- \left[\bar{\bar{M}}_{ss}\right]^{-1}
+	\begin{bmatrix}
+		\left[\bar{\bar{K}}_{sc}\right] & \left[\bar{\bar{C}}_{sc}\right] & \left[\bar{\bar{M}}_{sc}\right]
+	\end{bmatrix}
+	\begin{Bmatrix} \{q_c(s)\} \\ s \{q_c(s)\} \\ s^2 \{q_c(s)\} \end{Bmatrix}
+\end{multline}
+
+Define the following simplifying matrices:
+\begin{align}
+	[T_{21}] &= - \left[\bar{\bar{M}}_{ss}\right]^{-1} \left[\bar{\bar{K}}_{ss}\right] \\
+	[T_{22}] &= - \left[\bar{\bar{M}}_{ss}\right]^{-1} \left[\bar{\bar{C}}_{ss}\right] \\
+	[T_{2r}] &= q_D \left[\bar{\bar{M}}_{ss}\right]^{-1} [I_r] \\
+	[T_{2c}] &= -\left[\bar{\bar{M}}_{ss}\right]^{-1}
+		\begin{bmatrix}
+		\left[\bar{\bar{K}}_{sc}\right] & \left[\bar{\bar{C}}_{sc}\right] & \left[\bar{\bar{M}}_{sc}\right]
+		\end{bmatrix}
+\end{align}
+Equation \ref{eq:EOMcoupled4} then simplifies to
+\begin{align}
+	s\{x_2\} &= [T_{21}] \{x_1\} + [T_{22}] \{x_2\} + [T_{2r}] \{r\} + [T_{2c}] \{q_c\}
 \end{align}
 
+Now, there exist first-order linear ODEs for the structural dynamic states and the aerodynamic lag states so the dynamics of the full system can be written in state-space form, combining Equations \ref{eq:lagDynamics} and \ref{eq:EOMcoupled4}:
+\begin{align}
+	\label{eq:plantSS}
+	s \begin{Bmatrix} \{x_1\} \\ \{x_2\} \\ \{r\} \end{Bmatrix}
+	&= \begin{bmatrix}
+		[0] & [I] & [0] & \\
+		[T_{21}] & [T_{22}] & [T_{2r}] \\
+		[0] & [B_{rs}] & [A_r]
+	\end{bmatrix}
+	\begin{Bmatrix} \{x_1\} \\ \{x_2\} \\ \{r\} \end{Bmatrix}
+	+ \begin{bmatrix}
+		[0] & [0] & [0] \\
+		[ & T_{2c} & ] \\
+		[0] & [B_{rc}] & [0]
+	\end{bmatrix}
+	\begin{Bmatrix} \{q_c\} & s \{q_c\} & s^2 \{q_c\} \end{Bmatrix}
+\end{align}
+
+Define the state vector of the MARGE plant to be
+\begin{align}
+	\label{eq:plantState}
+	\{x_p\} &= \begin{Bmatrix} \{x_1\} \\ \{x_2\} \\ \{r\} \end{Bmatrix}
+\end{align}
+and the input vector of the MARGE plant to be
+\begin{align}
+	\{u_p\} &= \begin{Bmatrix} \{q_c\} \\ s \{q_c\} \\ s^2 \{q_c\} \end{Bmatrix}
+\end{align}
+Then, Eq. \ref{eq:plantSS} can be written in the form that is desired:
+\begin{align}
+	s \{x_p\} &= [A_p] \{x_p\} + [B_p] \{u_p\}
+\end{align}
+where $[A_p]$ and $[B_p]$ are the block matrices in Eq. \ref{eq:plantSS}.
 
 % +----------------------------------------------------------------------------+
-% | OUTPUT MODELING                                                            |
+% | PLANT OUTPUT MODELING                                                      |
 % +----------------------------------------------------------------------------+
-\section{Output Modeling}
+\section{Plant Output Modeling}
 
 This section will derive the output equations for MARGE in the form
 \begin{align}
-	\{\dot{y}\} = [C_p]\{x\}+[D_p]\{u\}
+	\{y_p\} = [C_p]\{x_p\}+[D_p]\{u_p\}
 \end{align}
-The output of MARGE consists of three accelerometers, one strain gauge, and one pitch sensor.
+The output of MARGE consists of three acceleration, one strain, and one pitch measurements. The plant output model to be presented here captures all of these as well as an optional pitch rate output. Thus,
+\begin{align}
+	\{u_p\} = \begin{Bmatrix}
+		\text{acceleration 1} \\
+		\text{acceleration 2} \\
+		\text{acceleration 3} \\
+		\text{strain} \\
+		\text{rotation} \\
+		\text{rotation rate}
+	\end{Bmatrix}
+\end{align}
+These outputs are the inputs to the sensors described in the next section.
+
+The structural dynamic generalized state $\{q\}$ has modal coordinates which correspond to $n_s$ mode shapes of the structure $\{\phi_1\}, \dots, \{\phi_{n_s}\}$. These modes shapes are in physical coordinates. The motion of the system in physical coordinates $\{z(t)\}$ is
+\begin{align}
+	\{z(t)\} &= \begin{bmatrix} \{\phi_1\} & \dots & \{\phi_{n_s}\} \end{bmatrix} \{q\}
+\end{align}
+For the $i$th degree of freedom (DOF) of the system, this is
+\begin{align}
+	z_i(t) &= \left[ \phi^i \right] \{q(t)\}
+\end{align}
+where
+\begin{align}
+	\left[ \phi^i \right] &= \begin{bmatrix} \phi_1^i & \dots & \phi_{n_s}^i \end{bmatrix}
+\end{align}
+
+The motion of the system can be expressed in terms of the full plant state vector defined in Eq. \ref{eq:plantState} as
+\begin{align}
+	\label{eq:positionOut}
+	\{z_i(t)\} &= \left[ \phi^i \right] [T_\text{disp}] \{x_p(t)\}
+\end{align}
+where $[T_\text{disp}]$ is a matrix which extracts the $\{x_1\}$ component of $\{x_p\}$:
+\begin{align}
+	[T_\text{disp}] &= \begin{bmatrix} [I]_{n_s \times n_s} & [0]_{n_s \times n_s} & [0]_{n_s \times n_\text{lag}} \end{bmatrix}
+\end{align}
+Here, $n_s$ is the number of elastic ``structural'' modes used, $n_c$ is the number of rigid-body ``control'' modes used, and $n_\text{lag}$ is the number of lag terms used in the model.
+
+Similarly, the rates of the system's motion at DOF $i$ can be expressed using the $\{x_2\}$ component of the state vector $\{x_p\}$:
+\begin{align}
+	\label{eq:velocityOut}
+	\ddf{\{z_i(t)\}}{t} &= \left[ \phi^i \right] [T_\text{vel}] \{x_p(t)\}
+\end{align}
+where $[T_\text{vel}]$ is a matrix which extracts the $\{x_2\}$ component of $\{x_p\}$:
+\begin{align}
+	[T_\text{vel}] &= \begin{bmatrix} [0]_{n_s \times n_s} & [I]_{n_s \times n_s} & [0]_{n_s \times n_\text{lag}} \end{bmatrix}
+\end{align}
+
+The system's accelerations at DOF $i$ can then be expressed as
+\begin{align}
+	\ddf{^2\{z_i(t)\}}{t^2} &= \left[ \phi^i \right] [T_\text{vel}] \ddf{\{x_p(t)\}}{t}
+\end{align}
+The derivative of $\{x_p(t)\}$ is contained in Eq. \ref{eq:plantSS}. Using that expression here yields
+\begin{align}
+	\ddf{^2\{z_i(t)\}}{t^2} &= \left[ \phi^i \right] [T_\text{vel}]
+	\left( [A_p] \{x_p\} + [B_p] \{u_p(t)\} \right)
+\end{align}
+
+For the three accelerometer locations (DOFs) on MARGE with corresponding modal motions $\{\phi_1\}$, $\{\phi_2\}$, and $\{\phi_3\}$, the accelerations experienced by the sensors are
+\begin{align}
+	\begin{Bmatrix} 	u_1(t) \\ u_2(t) \\ u_3(t) \end{Bmatrix}
+	&= \begin{bmatrix}
+		\left[ \phi^1 \right] [T_\text{vel}] [A_p] \\
+		\left[ \phi^2 \right] [T_\text{vel}] [A_p] \\
+		\left[ \phi^3 \right] [T_\text{vel}] [A_p]
+	\end{bmatrix} \{x_p(t)\}
+	+ \begin{bmatrix}
+		\left[ \phi^1 \right] [T_\text{vel}] [B_p] \\
+		\left[ \phi^2 \right] [T_\text{vel}] [B_p] \\
+		\left[ \phi^3 \right] [T_\text{vel}] [B_p]
+	\end{bmatrix} \{u_p(t)\}
+\end{align}
+
+For the pitch output which is a measure of position instead of acceleration, Eq. \ref{eq:positionOut} is used instead:
+\begin{align}
+	u_5(t) &= \left[ \phi^5 \right] [T_\text{disp}] \{x_p(t)\}
+\end{align}
+The corresponding pitch rate output is similarly given by \ref{eq:velocityOut}
+\begin{align}
+	u_6(t) &= \left[ \phi^5 \right] [T_\text{vel}] \{x_p(t)\}
+\end{align}
+Note that the pitch rate output uses the same DOF in the mode shape ($\phi^5$) as the pitch output.
+
+% STRAIN OUTPUT ----------------------------------------------------------------
+\subsection{Strain Output}
+
+The structural dynamic generalized state $\{q\}$ has modal coordinates which also correspond to the load (force or moment) at each DOF in each of $n_s$ mode shapes of the structure $\{\psi_1\}, \dots, \{\psi_{n_s}\}$. (This is also known from the finite element model.) The loading state of the system in physical coordinates $\{L(t)\}$ is
+\begin{align}
+	\{L(t)\} &= \begin{bmatrix} \{\psi_1\} & \dots & \{\psi_{n_s}\} \end{bmatrix} \{q(t)\}
+\end{align}
+For the $i$th DOF of the system,
+\begin{align}
+	L_i(t) &= [\psi^i] \{q(t)\}
+\end{align}
+where
+\begin{align}
+	[\psi^i] &= \begin{bmatrix} \psi_1^i & \dots & \psi_{n_s}^i \end{bmatrix} \{q(t)\}
+\end{align}
+In a similar fashion as in Eq. \ref{eq:positionOut}, this DOF's load can be expressed in terms of the system state:
+\begin{align}
+	\label{eq:loadOut}
+	[\psi^i] &= \begin{bmatrix} \psi_1^i & \dots & \psi_{n_s}^i \end{bmatrix} [T_\text{disp}] \{x_p(t)\}
+\end{align}
+
+Given this load, the strain due to bending is deteremined using the following relation from Euler-Bernoulli linear beam theory:
+\begin{align}
+	\label{eq:beamTheory}
+	\varepsilon_{y} &= -\frac{M_x \cdot z}{I_{zz} \cdot E}
+\end{align}
+where $\varepsilon_y$ is the strain, $M_x$ is the bending moment, $z$ is the $z$-distance of the sensor from the elastic axis of the beam, $I_{zz}$ is the $z$-axis area moment of inertia, and $E$ is the modulus of elasticity. Although the axial load in the $y$ direction would also add to the strain output, its effect is negligible compared to that of bending. Thus, its effect has been ommitted in modeling.
+
+The strain gauge on MARGE is mounted on the lower surface of the rectangular cross-sectioned wing spar.  Thus, $z$ is equal to negative one half of the spar thickness $t$:
+\begin{align}
+	\varepsilon_{y} &= -\frac{M_x \cdot (-t/2)}{I_{zz} \cdot E}
+\end{align}
+
+Combining Eqs. \ref{eq:loadOut} and \label{eq:beamTheory} yields the final expression for MARGE's strain output, $u_4$:
+\begin{align}
+	u_4 &= \frac{t/2}{I_{zz} \cdot E} \begin{bmatrix} \psi_1^4 & \dots & \psi_{n_s}^4 \end{bmatrix} [T_\text{disp}] \{x_p(t)\}
+\end{align}
+
+Thus, the full expression for the plant output of MARGE is
+\begin{align}
+	\label{eq:plantOutputSS}
+	\{y_p\} &= \begin{bmatrix}
+		\left[ \phi^1 \right] [T_\text{vel}] [A_p] \\
+		\left[ \phi^2 \right] [T_\text{vel}] [A_p] \\
+		\left[ \phi^3 \right] [T_\text{vel}] [A_p] \\
+		\frac{t/2}{I_{zz} \cdot E} \begin{bmatrix} \psi_1^4 & \dots & \psi_{n_s}^4 \end{bmatrix} [T_\text{disp}] \\
+		\left[ \phi^5 \right] [T_\text{disp}] \\
+		\left[ \phi^5 \right] [T_\text{vel}]
+	\end{bmatrix} \{x_p\} + \begin{bmatrix}
+		\left[ \phi^1 \right] [T_\text{vel}] [B_p] \\
+		\left[ \phi^2 \right] [T_\text{vel}] [B_p] \\
+		\left[ \phi^3 \right] [T_\text{vel}] [B_p] \\
+		0 \\ 0 \\ 0
+	\end{bmatrix}  \{u_p\}
+\end{align}
+Thus, the plant output of MARGE has been derived the form that is desired
+\begin{align}
+	\{y_p\} &= [C_p] \{x_p\} + [D_p] \{u_p\}
+\end{align}
+where $[C_p]$ and $[D_p]$ are the block matrices in Eq. \ref{eq:plantOutputSS}.
 
 % +----------------------------------------------------------------------------+
 % | ACTUATION AND SENSING DYNAMICS                                             |
 % +----------------------------------------------------------------------------+
 \section{Actuation and Sensing Dynamics}
-When developing a model that is used for control design, the dynamics of the actuators and sensors must be accounted for. The output of the control law will be fed not into the plant, but the imperfect actuators. The input of the control law will come not directly from the plant, but from the imperfect sensors. The imperfect actuators and sensors can be accounted for in modeling by combining the actuator, plant, and sensor models into an integrated system model that can then be used for control design; see Fig. \ref{fig:actPlantSens} for a block diagram of this system of systems.
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{ASEblockDiagram.png}
-    \label{fig:actPlantSens}
-    \caption{Integrated model of actuation, plant, and sensing in a control loop}
-\end{figure}
+
+When developing a model that is used for control design, the dynamics of the actuators and sensors must be accounted for. The output of the control law will be fed not into the plant, but the imperfect actuators. The input of the control law will come not directly from the plant, but from the imperfect sensors. Thus, the goal of this section is to determine dynamic models for the actuators and the sensors in the forms
+\begin{equation}
+\begin{aligned}
+	\ddf{}{t} \{x_\text{act}\} &= [A_\text{act}]\{x_\text{act}\}+[B_\text{act}]\{u_\text{act}\} \\
+	\{y_\text{act}\} &= [C_\text{act}]\{x_\text{act}\}+[D_\text{act}]\{u_\text{act}\}
+\end{aligned}
+\end{equation}
+and
+\begin{equation}
+\begin{aligned}
+	\ddf{}{t} \{x_\text{sens}\} &= [A_\text{sens}]\{x_\text{sens}\}+[B_\text{sens}]\{u_\text{sens}\} \\
+	\{y_\text{sens}\} &= [C_\text{sens}]\{x_\text{sens}\}+[D_\text{sens}]\{u_\text{sens}\}
+\end{aligned}
+\end{equation}
 
 The servo-actuated control surfaces on the wing and tail are known (from \cite{Quenzer2019}) to have dynamics according to the following transfer function\footnote{The numerator of this transfer function differs from that defined in \cite{Quenzer2019} because the actuator is calibrated to have unity DC gain before use.}:
 \begin{align}
@@ -324,3 +604,18 @@ A similar process would be appropriate for a set of imperfect sensors. However, 
     \{y_\text{sens}\} &= \{u_\text{sens}\}
 \end{align}
 In other words, the output of the sensor was taken as the output of the plant. This then forms the sensor block shown in Fig. \ref{fig:actPlantSens}.
+
+% +----------------------------------------------------------------------------+
+% | COUPLED AEROSERVOELASTIC MODELING                                          |
+% +----------------------------------------------------------------------------+
+\section{Coupled Aeroservoelastic Modeling}
+
+The imperfect actuators and sensors can be accounted for in modeling by combining the actuator, plant, and sensor models into an integrated system model that can then be used for control design; see Fig. \ref{fig:actPlantSens} for a block diagram of this system of systems.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{ASEblockDiagram.png}
+    \label{fig:actPlantSens}
+    \caption{Integrated model of actuation, plant, and sensing in a control loop}
+\end{figure}
+
+<insert>
