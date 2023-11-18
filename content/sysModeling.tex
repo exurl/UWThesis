@@ -1,8 +1,9 @@
 \chapter{Dynamic System Modeling}
 \label{ch:sysModeling}
 
-The goal of this section is to obtain a preliminary state-space model for the aeroservoelastic system in the form
+The goal of this section is to derive a preliminary state-space model for the MARGE in the form
 \begin{equation}
+\label{eq:modelingGoal}
 	\begin{aligned}
     		s \{x\} &= [A] \{x\} + [B]\{u\} \\
 	    \{y\} &= [C] \{x\} + [D] \{u\}
@@ -24,11 +25,11 @@ This section will derive the plant dynamics for MARGE in the form
 % STRUCTURAL DYNAMICS ----------------------------------------------------------
 \subsection{Structural Dynamics}
 
-The equations of motion for the linear, second-order structural dynamic system with damping and forcing in the Laplace domain are
+MARGE's structural dynamics is modeled as a linear, second-order structural dynamic system with damping and external forcing. The equations of motion for such a system are
 \begin{align}
     s^2 [M] \{q(s)\} + s [C] \{q(s)\} + [K] \{q(s)\} &= \{f(s)\}
 \end{align}
-where $\{q\}$ is the structural dynamic state expressed in the generalized modal coordinates, $\{f(s)\}$ is the generalized external forcing, and $[M]$, $[C]$, and $[K]$ are generalized mass, damping, and stiffness matrices respectively. Note that the modal coordinates include both elastic motions (of the structure) and rigid-body motions (of the structure and the control surfaces):
+where $\{q\}$ is the structural dynamic state expressed in generalized modal coordinates, $\{f(s)\}$ is the generalized external forcing, and $[M]$, $[C]$, and $[K]$ are generalized mass, damping, and stiffness matrices respectively. Note that the modal coordinates include both elastic motions (of the structure) and rigid-body motions (of the structure and the control surfaces):
 \begin{align}
     \{q\} = \begin{Bmatrix} q_{s} \\ q_{c} \end{Bmatrix}
 \end{align}
@@ -74,7 +75,7 @@ The whole system can be further decomposed into structural and control component
         \{H_c\}
     \end{Bmatrix}
 \end{multline}
-The control modes are those corresponding to rigid-body motions of control surfaces. The structural modes are all other modes, including flexible-body modes and rigid-body modes of the entire model.
+The control modes are those corresponding to rigid-body motions of control surfaces. The structural modes are all other modes, including flexible-body modes and rigid-body pitching of the entire model.
 
 It is assumed that the dynamics of the control modes are completely determined by the control inputs and the inputs are not directly affected by the control modes, i.e. the actuators are irreversible controls. Then, interest is only in the dynamics of the structural modes:
 \begin{multline}
@@ -125,16 +126,20 @@ Note that since the control modes are rigid-body modes, they have no stiffness a
 \subsection{The Roger Approximation}
 
 % The aerodynamic influence matrices $[A]$ and $[A_G]$ are nonlinear functions of frequency. In order to obtain a linear state-space system, these must be approximated as analytic functions of $s$.
-The aerodynamic influence matrix $[A]$ is a nonlinear function of reduced frequency $k$. In order to obtain a linear state-space system, it must be approximated as an analytic function of $k$.
+The aerodynamic influence matrix $[A]$ is a nonlinear function of the Laplace variable $s$. In order to obtain a linear state-space system, it must be approximated as an analytic function of $s$.
 
 The Roger approximation \cite{Roger1977} is a method of generating a rational function approximation of the aerodynamic influence matrix in the form
 \begin{align}
 	\label{eq:RogerApprox}
-    [A(jk)] &\approx [\bar{P}_0] + jk [\bar{P}_1] + (jk)^2 [\bar{P}_2] + \sum_{n=1}^{N_\text{lag}} \frac{jk}{jk+\bar{\beta}_n} [\bar{P}_{n+2}]
+    [A(s)] \approx [P_0] + s [P_1] + s^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{n+2}]
 \end{align}
 where $[P]$ are the unknown real-valued matrices that are fit to the tabulated matrices. Aside from the zeroth, first, and second order terms, there are $N_\text{lag}$ additional ``lag term'' approximating functions which are defined by their respective constants $\bar{\beta}$.
 
-Given a tabulated set of known aerodynamic influence matrices $[A]$ (obtained from an unsteady aerodynamic solver such as that found in NASTRAN) across $N$ reduced frequencies, each entry $p$ of the matrices $[P]$ in the above approximation can be fit to the corresponding entries $a$ of the aerodynamic influence matrices $[A]$ through a linear regression:
+Begin with an approximation only along the frequency domain:
+\begin{align}
+    [A(jk)] &\approx [\bar{P}_0] + jk [\bar{P}_1] + (jk)^2 [\bar{P}_2] + \sum_{n=1}^{N_\text{lag}} \frac{jk}{jk+\bar{\beta}_n} [\bar{P}_{n+2}]
+\end{align}
+where $k$ is the reduced frequency. Given a tabulated set of aerodynamic influence matrices $[A]$ (obtained from an unsteady aerodynamic solver such as that found in NASTRAN) computed across $N$ reduced frequencies, each entry $p$ of the matrices $[P]$ in the above approximation can be fit to the corresponding entries $a$ of the aerodynamic influence matrices $[A]$ through a linear regression:
 \begin{align}
 	\label{eq:RogerRegression}
     \begin{bmatrix}
@@ -163,7 +168,7 @@ The linear regression in Eq. \ref{eq:RogerRegression} can then be solved using t
 
 Replacing the reduced frequency with the equivalent angular frequency yields
 \begin{align}
-	[A(j\omega)] = [P_0] + j\omega [P_1] - \omega^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{j\omega}{j\omega+\beta_n} [P_{n+2}]
+	[A(j\omega)] \approx [P_0] + j\omega [P_1] - \omega^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{j\omega}{j\omega+\beta_n} [P_{n+2}]
 \end{align}
 where
 \begin{equation}
@@ -181,14 +186,14 @@ where
 \end{equation}
 This can be extended from the imaginary exis to the full Laplace domain with analytic continuation, leading to the final form of the Roger approximation for aerodynamic influence matrices:
 \begin{align}
-	[A(s)] = [P_0] + s [P_1] + s^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{n+2}]
+	[A(s)] \approx [P_0] + s [P_1] + s^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{n+2}]
 \end{align}
 
 It should be noted that the Roger approximation is only valid over the tabulated reduced frequency range. Thus, any result from the model is only valid if the airspeed that the model ia analyzed at is sufficiently above
 \begin{align}
 	U_\text{min} &= \frac{\omega_\text{max} \cdot b}{k_\text{max}}
 \end{align}
-where $\omega_\text{max}$ is the maximum frequency of interest in the analysis. Thus, this model which incorporates the Roger Approximation cannot be used for purely structural dynamic analysis (where $U=0$).
+where $\omega_\text{max}$ is the maximum frequency of interest in the analysis. Thus, modeling which utilizes the Roger Approximation cannot be used for purely structural dynamic analysis (where $U=0$).
 
 % COUPLED AEROELASTIC DYNAMICS -------------------------------------------------
 \subsection{Coupled Aeroelastic Dynamics}
@@ -601,7 +606,7 @@ where the $[A]$, $[B]$, $[C]$, and $[D]$ system matrices for the two types of ac
 
 A similar process would be appropriate for a set of imperfect sensors. However, the high-rate sensors used in MARGE have approximately no dynamics in the frequency range of interest. Thus, the sensor response was approximated as
 \begin{align}
-    \{y_\text{sens}\} &= \{u_\text{sens}\}
+    \{y_\text{sens}\} &= [I] \{u_\text{sens}\}
 \end{align}
 In other words, the output of the sensor was taken as the output of the plant. This then forms the sensor block shown in Fig. \ref{fig:actPlantSens}.
 
@@ -617,5 +622,27 @@ The imperfect actuators and sensors can be accounted for in modeling by combinin
     \label{fig:actPlantSens}
     \caption{Integrated model of actuation, plant, and sensing in a control loop}
 \end{figure}
+In the system illustration in Fig. \ref{fig:actPlantSens}, the actuators take in the control command and output control forces; the plant takes in control forces and outputs motions; the sensors take in motions and output measured motions; and a control law can then use this measured motion to create a control command for MARGE.
 
-<insert>
+First, the actuator dynamics can be coupled to the plant dynamics. In state-space form, this is
+\begin{align}
+	\label{eq:coupledState}
+	s \begin{Bmatrix} \{x_\text{act}\} \\ \{x_p\} \end{Bmatrix} &= \begin{bmatrix}
+		[A_\text{act}] & [0] \\
+		[B_p] [C_\text{act}] & [A_p]
+	\end{bmatrix} \begin{Bmatrix} \{x_\text{act}\} \\ \{x_p\} \end{Bmatrix}
+	+ \begin{bmatrix} [B_\text{act}] \\ [B_p][D_\text{act}] \end{bmatrix} \{u_\text{act}\}
+\end{align}
+where the $[B_p]$ entries in the block matrices are used to convert $\{x_\text{act}\}$ and $\{u_\text{act}\}$ into the plant's input, $\{u_p\}=\{y_\text{act}\}$.
+
+The actuator can similarly be coupled to the plant in the output equations:
+\begin{align}
+	\label{eq:coupledOutput}
+	\{y_p\} &= \begin{bmatrix}
+		[D_p][C_\text{act}] & [C_p]
+	\end{bmatrix} \begin{Bmatrix} \{x_\text{act}\} \\ \{x_p\} \end{Bmatrix}
+	+ [D_p] [D_\text{act}] \{u_\text{act}\}
+\end{align}
+where similarly, the $[D_p]$ entries are used to convert $\{x_\text{act}\}$ and $\{u_\text{act}\}$ into the plant's input, $\{u_p\}=\{y_\text{act}\}$.
+
+The block matrices in Eq. \ref{eq:coupledState} and \ref{eq:coupledOutput} form the coupled actuator-plant system in Fig. \ref{fig:actPlantSens}. Since the sensors are modeled as perfect, this is also equivalent to the coupled actuator-plant-sensor system. Thus, Eq. \ref{eq:coupledState} and \ref{eq:coupledOutput} define the state-full, coupled space model for MARGE in the form required as defined in Eq. \ref{eq:modelingGoal}.
