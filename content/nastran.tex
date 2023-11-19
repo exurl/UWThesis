@@ -26,6 +26,33 @@ The area moments of inertia of the beam elements in the finite element model are
 
 The aerodynamic loads on the NASTRAN model are based on the doublet-lattice model (DLM) of aerodynamics. This linear aerodynamic model assumes incompressible, inviscid, irrotational flow around thin lifting surfaces. The loads were transferred from the aerodynamic panels to the structural elements with NASTRAN
 
- The loads on the finite element model were determined using doublet-lattice lifting surface theory which is <insert>
- 
- The loads on the aerodynamic panels were transferred to the structural nodes via a spline interpolation.
+The loads on the finite element model were determined using doublet-lattice lifting surface theory which is <insert>
+The loads on the aerodynamic panels were transferred to the structural nodes via a spline interpolation.
+
+The structural dynamic solution to the NASTRAN model yielded the natural modes which are described in the table below
+\begin{table}[H]
+	\centering
+	\label{tab:nastranResult}
+	\caption{NASTRAN Modal Properties}
+	\begin{tabular}{cll}
+		\hline
+		\# & $\omega_n$ & Description \\
+		\hline\hline
+		1  &   0     & pitching \\
+		2  &   1.444 & wing bending 1 \\
+		3  &  10.487 & wing bending 2 \\
+		4  &  16.638 & fuselage bending 1 \\
+		5  &  19.200 & wing twisting 1 \\
+		6  &  21.948 & fuselage in-plane bending 1 \\
+		7  &  32.311 & wing bending 3 \\
+		8  &  60.852 & fuselage bending 2 \\
+		9  &  66.011 & wing bending 4 \\
+		10 &  69.298 & wing in-plane bending 1 \\
+		11 & 113.674 & wing bending 5 \\
+		12 & 120.642 & fuselage bending 3 \\
+		13 & 153.716 & fuselage in-plane bending 2  \\
+		14 & 160.909 & fuselage bending 4 \\
+		15 & 175.941 & wing bending 6 \\
+		\hline
+	\end{tabular}
+\end{table}

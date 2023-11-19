@@ -25,11 +25,11 @@ This section will derive the plant dynamics for MARGE in the form
 % STRUCTURAL DYNAMICS ----------------------------------------------------------
 \subsection{Structural Dynamics}
 
-MARGE's structural dynamics is modeled as a linear, second-order structural dynamic system with damping and external forcing. The equations of motion for such a system are
+MARGE's structure is modeled as a linear, second-order system with damping and external forcing. The equations of motion for such a system are
 \begin{align}
     s^2 [M] \{q(s)\} + s [C] \{q(s)\} + [K] \{q(s)\} &= \{f(s)\}
 \end{align}
-where $\{q\}$ is the structural dynamic state expressed in generalized modal coordinates, $\{f(s)\}$ is the generalized external forcing, and $[M]$, $[C]$, and $[K]$ are generalized mass, damping, and stiffness matrices respectively. Note that the modal coordinates include both elastic motions (of the structure) and rigid-body motions (of the structure and the control surfaces):
+where $\{q\}$ is the structural dynamic state expressed in generalized modal coordinates, $\{f(s)\}$ is the generalized external forcing, and $[M]$, $[C]$, and $[K]$ are generalized mass, damping, and stiffness matrices respectively. Note that the modal coordinates include both elastic motions (of the structure) denoted by the subscript $s$ and rigid-body motions (of the structure and the control surfaces) denoted by the subscript $c$:
 \begin{align}
     \{q\} = \begin{Bmatrix} q_{s} \\ q_{c} \end{Bmatrix}
 \end{align}
@@ -43,7 +43,7 @@ The forcing for the aeroservoelastic wing can be decomposed into the aerodynamic
 \begin{align}
     s^2 [M] \{q(s)\} + s [C] \{q(s)\} + [K] \{q(s)\} &= q_D [A(s)] \{q(s)\} + \begin{Bmatrix} \{0\} \\ \{H_c\} \end{Bmatrix}
 \end{align}
-where $[A(s)]$ is the aerodynamic influence matrix for the state and ${H_c}$ is the hinge moment's influence.
+where $[A(s)]$ is the aerodynamic influence matrix for the state and $\{H_c\}$ are the hinge moments from the actuators.
 
 The whole system can be further decomposed into structural and control components:
 \begin{multline}
@@ -126,20 +126,28 @@ Note that since the control modes are rigid-body modes, they have no stiffness a
 \subsection{The Roger Approximation}
 
 % The aerodynamic influence matrices $[A]$ and $[A_G]$ are nonlinear functions of frequency. In order to obtain a linear state-space system, these must be approximated as analytic functions of $s$.
-The aerodynamic influence matrix $[A]$ is a nonlinear function of the Laplace variable $s$. In order to obtain a linear state-space system, it must be approximated as an analytic function of $s$.
+The aerodynamic influence matrix $[A]$ is a function of the Laplace variable $s$. For a thin airfoil oscillating in a potential flow, Theodorsen's solution applies \cite{Theodorsen1949}. This solution is nonlinear and unable to be represented in a linear system. In order to obtain the linear state-space system, $[A]$ must be approximated as an analytic function of $s$.
 
 The Roger approximation \cite{Roger1977} is a method of generating a rational function approximation of the aerodynamic influence matrix in the form
 \begin{align}
 	\label{eq:RogerApprox}
     [A(s)] \approx [P_0] + s [P_1] + s^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{n+2}]
 \end{align}
-where $[P]$ are the unknown real-valued matrices that are fit to the tabulated matrices. Aside from the zeroth, first, and second order terms, there are $N_\text{lag}$ additional ``lag term'' approximating functions which are defined by their respective constants $\bar{\beta}$.
+where $[P]$ are the unknown real-valued matrices that are fit to tabulated known $[A(s)]$ matrices (obtained from an unsteady aerodynamic solver such as that found in NASTRAN). Aside from the zeroth, first, and second order terms, there are $N_\text{lag}$ additional ``lag term'' approximating functions which are defined by their respective constants $\beta$.
 
 Begin with an approximation only along the frequency domain:
 \begin{align}
     [A(jk)] &\approx [\bar{P}_0] + jk [\bar{P}_1] + (jk)^2 [\bar{P}_2] + \sum_{n=1}^{N_\text{lag}} \frac{jk}{jk+\bar{\beta}_n} [\bar{P}_{n+2}]
 \end{align}
-where $k$ is the reduced frequency. Given a tabulated set of aerodynamic influence matrices $[A]$ (obtained from an unsteady aerodynamic solver such as that found in NASTRAN) computed across $N$ reduced frequencies, each entry $p$ of the matrices $[P]$ in the above approximation can be fit to the corresponding entries $a$ of the aerodynamic influence matrices $[A]$ through a linear regression:
+where $k$ is the reduced frequency
+\begin{align}
+	k = \frac{\omega \cdot b}{U}
+\end{align}
+Given the tabulated set of aerodynamic influence matrices $[A]$ computed across $N$ reduced frequencies, each entry $p$ of the matrices $[\bar{P}]$ in the above approximation can be fit to the corresponding entries $a$ of the aerodynamic influence matrices $[A]$. The steady-state component of the approximation $[\bar{P}_0]$ is fixed to be equal to the steady-state aerodynamic influence matrix (with zero reduced frequency):
+\begin{align}
+    [\bar{P}_0] &= [A(k=0)]
+\end{align}
+The remaining $[\bar{P}]$ matrices are determined using a linear regression:
 \begin{align}
 	\label{eq:RogerRegression}
     \begin{bmatrix}
@@ -158,10 +166,6 @@ where $k$ is the reduced frequency. Given a tabulated set of aerodynamic influen
 	    \Re(a(jk_N)) - a(0) \\
 	    \Im(a(jk_N))	    
     \end{Bmatrix}
-\end{align}
-where the steady-state component of the approximation $[P_0]$ is fixed to be equal to the steady-state aerodynamic influence matrix (with zero reduced frequency):
-\begin{align}
-    [\bar{P}_0] &= [A(k=0)]
 \end{align}
 The linear regression in Eq. \ref{eq:RogerRegression} can then be solved using the method of least-squares to obtain the fitted $[\bar{P}]$ matrices.
 % With these matrices, Eq. \ref{eq:RogerApprox} is a known rational approximation for the aerodnyamic influence matrices across the tabulated natural frequencies. Replacing the aerodynamic influence matrices in Eq. \ref{eq:EOM} yields a fully linear model for structural dynamics of MARGE.
@@ -184,7 +188,7 @@ where
 	\beta_{N_\text{lag}} &= \bar{\beta}_{N_\text{lag}} \frac{U}{b}
 \end{aligned}
 \end{equation}
-This can be extended from the imaginary exis to the full Laplace domain with analytic continuation, leading to the final form of the Roger approximation for aerodynamic influence matrices:
+This is then extended from the imaginary axis to the full Laplace domain through analytic continuation, leading to the final form of the Roger approximation for aerodynamic influence matrices:
 \begin{align}
 	[A(s)] \approx [P_0] + s [P_1] + s^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{n+2}]
 \end{align}
@@ -209,7 +213,7 @@ Replacing the aerodynamic influence matrices in Eq. \ref{eq:EOM} with the equiva
 	- \left( s^2 [M_{sc}] + s [C_{sc}] - q_D \left( [P_{sc,0}] + s [P_{sc,1}] + s^2 [P_{sc,2}] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{sc,n+2}] \right) \right) \{q_c(s)\}
 \end{multline}
 
-Define the following coupled aeroelastic matrices:
+Define the following coupled aeroelastic mass, damping, and stiffness matrices:
 \begin{equation}
 \begin{aligned}
 	\left[\bar{\bar{M}}\right] &= [M] - q_D [P_2] \\
@@ -245,7 +249,7 @@ Define the following aerodynamic ``lag states'' as
 	\{r_{N_\text{lag}}\} &= \begin{bmatrix} [P_{ss,N_\text{lag}+2}] & [P_{sc,N_\text{lag}+2}] \end{bmatrix} \frac{s}{s+\beta_{N_\text{lag}}}
 \end{aligned}
 \end{equation}
-Rearranging this yields an expression for the rates of the lag states:
+Rearranging this yields an expression for the first derivative of the lag states:
 \begin{equation}
 \begin{aligned}
 	s \{r_1\} &= s [P_{ss,3}] \{q_s(s)\} + s [P_{sc,3}] \{q_c(s)\} - \beta_1 \{r_1\} \\
@@ -285,7 +289,7 @@ The sum of lag states can be simplifed introducing the matrix $[I_r]$ such that
 	\{r_1\} + \dots + \{r_{N_\text{lag}}\}
 	&= \begin{bmatrix} [I] & \dots & [I] \end{bmatrix} \begin{Bmatrix} \{r_1\} \\ \vdots \\ \{r_{N_\text{lag}}\} \end{Bmatrix} = [I_r] \{r\}
 \end{align}
-This further compacts the Eq. \ref{eq:EOMcoupled2}, which becomes
+This further compacts Eq. \ref{eq:EOMcoupled2}, which becomes
 \begin{multline}
 	\label{eq:EOMcoupled3}
 	\left( s^2 \left[\bar{\bar{M}}_{ss}\right] + s \left[\bar{\bar{C}}_{ss}\right] + \left[\bar{\bar{K}}_{ss}\right] \right) \{ q_s(s)\}
@@ -336,7 +340,7 @@ Equation \ref{eq:EOMcoupled4} then simplifies to
 	s\{x_2\} &= [T_{21}] \{x_1\} + [T_{22}] \{x_2\} + [T_{2r}] \{r\} + [T_{2c}] \{q_c\}
 \end{align}
 
-Now, there exist first-order linear ODEs for the structural dynamic states and the aerodynamic lag states so the dynamics of the full system can be written in state-space form, combining Equations \ref{eq:lagDynamics} and \ref{eq:EOMcoupled4}:
+Now there exist first-order linear ODEs for the structural dynamic states (Eq. \ref{eq:EOMcoupled4}) and the aerodynamic lag states (Eq. \ref{eq:lagDynamics}) so the dynamics of the full system can be written in state-space form:
 \begin{align}
 	\label{eq:plantSS}
 	s \begin{Bmatrix} \{x_1\} \\ \{x_2\} \\ \{r\} \end{Bmatrix}
@@ -351,7 +355,7 @@ Now, there exist first-order linear ODEs for the structural dynamic states and t
 		[ & T_{2c} & ] \\
 		[0] & [B_{rc}] & [0]
 	\end{bmatrix}
-	\begin{Bmatrix} \{q_c\} & s \{q_c\} & s^2 \{q_c\} \end{Bmatrix}
+	\begin{Bmatrix} \{q_c\} \\ s \{q_c\} \\ s^2 \{q_c\} \end{Bmatrix}
 \end{align}
 
 Define the state vector of the MARGE plant to be
@@ -391,7 +395,7 @@ The output of MARGE consists of three acceleration, one strain, and one pitch me
 \end{align}
 These outputs are the inputs to the sensors described in the next section.
 
-The structural dynamic generalized state $\{q\}$ has modal coordinates which correspond to $n_s$ mode shapes of the structure $\{\phi_1\}, \dots, \{\phi_{n_s}\}$. These modes shapes are in physical coordinates. The motion of the system in physical coordinates $\{z(t)\}$ is
+The structural dynamic generalized state $\{q\}$ has modal coordinates which correspond to $n_s$ mode shapes of the structure $\{\phi_1\}, \dots, \{\phi_{n_s}\}$. These modes shapes are in physical coordinates and are known from the structural dynamic solution of the finite-element model. The motion of the system in physical coordinates $\{z(t)\}$ is
 \begin{align}
 	\{z(t)\} &= \begin{bmatrix} \{\phi_1\} & \dots & \{\phi_{n_s}\} \end{bmatrix} \{q\}
 \end{align}
@@ -399,7 +403,7 @@ For the $i$th degree of freedom (DOF) of the system, this is
 \begin{align}
 	z_i(t) &= \left[ \phi^i \right] \{q(t)\}
 \end{align}
-where
+where $\left[ \phi^i \right]$ contains the contribution to that DOF's motion from each mode:
 \begin{align}
 	\left[ \phi^i \right] &= \begin{bmatrix} \phi_1^i & \dots & \phi_{n_s}^i \end{bmatrix}
 \end{align}
@@ -425,6 +429,9 @@ where $[T_\text{vel}]$ is a matrix which extracts the $\{x_2\}$ component of $\{
 	[T_\text{vel}] &= \begin{bmatrix} [0]_{n_s \times n_s} & [I]_{n_s \times n_s} & [0]_{n_s \times n_\text{lag}} \end{bmatrix}
 \end{align}
 
+% ACCELERATION OUTPUT ----------------------------------------------------------
+\subsection{Acceleration Output}
+
 The system's accelerations at DOF $i$ can then be expressed as
 \begin{align}
 	\ddf{^2\{z_i(t)\}}{t^2} &= \left[ \phi^i \right] [T_\text{vel}] \ddf{\{x_p(t)\}}{t}
@@ -437,7 +444,7 @@ The derivative of $\{x_p(t)\}$ is contained in Eq. \ref{eq:plantSS}. Using that 
 
 For the three accelerometer locations (DOFs) on MARGE with corresponding modal motions $\{\phi_1\}$, $\{\phi_2\}$, and $\{\phi_3\}$, the accelerations experienced by the sensors are
 \begin{align}
-	\begin{Bmatrix} 	u_1(t) \\ u_2(t) \\ u_3(t) \end{Bmatrix}
+	\begin{Bmatrix} 	y_1(t) \\ y_2(t) \\ y_3(t) \end{Bmatrix}
 	&= \begin{bmatrix}
 		\left[ \phi^1 \right] [T_\text{vel}] [A_p] \\
 		\left[ \phi^2 \right] [T_\text{vel}] [A_p] \\
@@ -449,6 +456,9 @@ For the three accelerometer locations (DOFs) on MARGE with corresponding modal m
 		\left[ \phi^3 \right] [T_\text{vel}] [B_p]
 	\end{bmatrix} \{u_p(t)\}
 \end{align}
+
+% PITCH OUTPUT -----------------------------------------------------------------
+\subsection{Pitch Output}
 
 For the pitch output which is a measure of position instead of acceleration, Eq. \ref{eq:positionOut} is used instead:
 \begin{align}
@@ -473,12 +483,12 @@ For the $i$th DOF of the system,
 \end{align}
 where
 \begin{align}
-	[\psi^i] &= \begin{bmatrix} \psi_1^i & \dots & \psi_{n_s}^i \end{bmatrix} \{q(t)\}
+	\psi^i &= \begin{bmatrix} \psi_1^i & \dots & \psi_{n_s}^i \end{bmatrix} \{q(t)\}
 \end{align}
 In a similar fashion as in Eq. \ref{eq:positionOut}, this DOF's load can be expressed in terms of the system state:
 \begin{align}
 	\label{eq:loadOut}
-	[\psi^i] &= \begin{bmatrix} \psi_1^i & \dots & \psi_{n_s}^i \end{bmatrix} [T_\text{disp}] \{x_p(t)\}
+	\psi^i &= \begin{bmatrix} \psi_1^i & \dots & \psi_{n_s}^i \end{bmatrix} [T_\text{disp}] \{x_p(t)\}
 \end{align}
 
 Given this load, the strain due to bending is deteremined using the following relation from Euler-Bernoulli linear beam theory:
@@ -486,7 +496,7 @@ Given this load, the strain due to bending is deteremined using the following re
 	\label{eq:beamTheory}
 	\varepsilon_{y} &= -\frac{M_x \cdot z}{I_{zz} \cdot E}
 \end{align}
-where $\varepsilon_y$ is the strain, $M_x$ is the bending moment, $z$ is the $z$-distance of the sensor from the elastic axis of the beam, $I_{zz}$ is the $z$-axis area moment of inertia, and $E$ is the modulus of elasticity. Although the axial load in the $y$ direction would also add to the strain output, its effect is negligible compared to that of bending. Thus, its effect has been ommitted in modeling.
+where $\varepsilon_y$ is the strain, $M_x$ is the bending moment (from the relevant DOF of $\{L\}$), $z$ is the $z$-distance of the sensor from the elastic axis of the beam, $I_{zz}$ is the $z$-axis area moment of inertia, and $E$ is the modulus of elasticity. Although the axial load in the $y$-direction would also add to the strain output, its effect is negligible compared to that of bending. This is especially true because the axial y-stress at rest due to the weight of the model is tared out at before tests. Thus, its effect has been ommitted in modeling.
 
 The strain gauge on MARGE is mounted on the lower surface of the rectangular cross-sectioned wing spar.  Thus, $z$ is equal to negative one half of the spar thickness $t$:
 \begin{align}
@@ -556,7 +566,7 @@ This transfer function was then converted to the following equivalent state-spac
 \end{equation}
 where $u$ is the input, $y$ is the output, and $\{x\}$ is the internal state of the actuator.
 
-The wind tunnel gust vanes were measured to have no internal dynamics except for a pure time delay of 0.34 seconds. This pure delay was approximated as a second-order transfer function using a Pad\'e approximant:
+The wind tunnel gust vanes were measured to have ``perfect'' dynamics except for a pure time delay of 0.34 seconds. This pure delay was approximated as a second-order transfer function using a Pad\'e approximant:
 \begin{align}
     G(s) &= \frac{s^2 - 176.47s + 10381}{s^2 + 176.47s + 10381}
 \end{align}
@@ -633,7 +643,7 @@ First, the actuator dynamics can be coupled to the plant dynamics. In state-spac
 	\end{bmatrix} \begin{Bmatrix} \{x_\text{act}\} \\ \{x_p\} \end{Bmatrix}
 	+ \begin{bmatrix} [B_\text{act}] \\ [B_p][D_\text{act}] \end{bmatrix} \{u_\text{act}\}
 \end{align}
-where the $[B_p]$ entries in the block matrices are used to convert $\{x_\text{act}\}$ and $\{u_\text{act}\}$ into the plant's input, $\{u_p\}=\{y_\text{act}\}$.
+where the entries in the block matrices containing $[B_p]$ are used to convert $\{x_\text{act}\}$ and $\{u_\text{act}\}$ into the plant's input, $\{u_p\}=\{y_\text{act}\}$.
 
 The actuator can similarly be coupled to the plant in the output equations:
 \begin{align}
@@ -643,6 +653,6 @@ The actuator can similarly be coupled to the plant in the output equations:
 	\end{bmatrix} \begin{Bmatrix} \{x_\text{act}\} \\ \{x_p\} \end{Bmatrix}
 	+ [D_p] [D_\text{act}] \{u_\text{act}\}
 \end{align}
-where similarly, the $[D_p]$ entries are used to convert $\{x_\text{act}\}$ and $\{u_\text{act}\}$ into the plant's input, $\{u_p\}=\{y_\text{act}\}$.
+where similarly, the terms involving $[D_p]$ are used to convert $\{x_\text{act}\}$ and $\{u_\text{act}\}$ into the plant's input, $\{u_p\}=\{y_\text{act}\}$.
 
 The block matrices in Eq. \ref{eq:coupledState} and \ref{eq:coupledOutput} form the coupled actuator-plant system in Fig. \ref{fig:actPlantSens}. Since the sensors are modeled as perfect, this is also equivalent to the coupled actuator-plant-sensor system. Thus, Eq. \ref{eq:coupledState} and \ref{eq:coupledOutput} define the state-full, coupled space model for MARGE in the form required as defined in Eq. \ref{eq:modelingGoal}.
