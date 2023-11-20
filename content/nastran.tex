@@ -1,11 +1,11 @@
 \chapter{Finite Element Modeling}
 \label{ch:nastran}
 
-An aeroelastic finite element model of MARGE was previously constructed using NASTRAN. The model captures MARGE, the wind tunnel test section walls, and the gust vanes.
+An aeroelastic finite element model of MARGE was previously constructed using NASTRAN. The model includes MARGE, the wind tunnel test section walls, and the gust vanes.
 
 % The structural model was constructed from classical beam elements and point masses. The 
 
-The wing structure and tail structure were each modeled as a single chain of Euler-Bernoulli beam elements along their respective spar.
+The wing structure and tail structure were each modeled as a single chain of Euler-Bernoulli beam elements along their respective spar. The wind tunnel walls were modeled as extremely stiff panels (which are approximately rigid).
 
 The area moments of inertia of the beam elements in the finite element model are reported in Table \ref{tab:beamInertia}.
 \begin{table}[H]
@@ -35,9 +35,9 @@ The structural dynamic solution to the NASTRAN model yielded the natural modes w
 	\label{tab:nastranResult}
 	\caption{NASTRAN Modal Properties}
 	\begin{tabular}{cll}
-		\hline
-		\# & $\omega_n$ & Description \\
 		\hline\hline
+		\# & $\omega_n$ & Description \\
+		\hline
 		1  &   0     & pitching \\
 		2  &   1.444 & wing bending 1 \\
 		3  &  10.487 & wing bending 2 \\
@@ -53,6 +53,6 @@ The structural dynamic solution to the NASTRAN model yielded the natural modes w
 		13 & 153.716 & fuselage in-plane bending 2  \\
 		14 & 160.909 & fuselage bending 4 \\
 		15 & 175.941 & wing bending 6 \\
-		\hline
+		\hline\hline
 	\end{tabular}
 \end{table}

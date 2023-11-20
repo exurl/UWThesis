@@ -37,6 +37,7 @@ For the second dataset, pairs of accelerometers on the wing located a short dist
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Generating Frequency Response Functions} %%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:generateFRF}
 
 Each GVT test point (input-output combination) was post-processed to generate the frequency response functions (FRFs) of the accelerometers to the impacts. This section describes the steps in this process.
 
@@ -58,6 +59,7 @@ First, the signal was buffered into overlapping Hann windows and transformed usi
 
 The products of the CZT are the power spectra of the signals. For any given accelerometer power spectrum $S_y$ and impact hammer power spectrum $S_x$, the frequency response function can then be computed as
 \begin{align}
+	\label{eq:frf}
     FRF &= \frac{G_{yy}}{G_{yx}}
 \end{align}
 where
@@ -114,9 +116,9 @@ The median of all of these damping ratios, each from a different FRF was then ta
     \centering
     \caption{Experimental Natural Modes}
     \begin{tabular}{ccl}
-        \hline
-        $\omega_n$ & $\zeta$ & Description \\
         \hline\hline
+        $\omega_n$ & $\zeta$ & Description \\
+        \hline
         0      &       & pitching \\
         1.422  & 0.030 & wing bending 1 \\
         10.142 & 0.046 & wing bending 2 \\
@@ -127,7 +129,13 @@ The median of all of these damping ratios, each from a different FRF was then ta
         51.706 & 0.084 & wing torsion 2 \\
         60.482 & 0.035 & wing bending 4 \\
         74.521 & 0.023 & fuselage bending 2 \\
-        \hline
+        \hline\hline
     \end{tabular}
     \label{tab:expModalData}
 \end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Finite Element Model Correction} %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The finite-element model was adjusted to better match the experimental GVT data. This was done by adjusting the bending and torsional stiffness of the various materials
