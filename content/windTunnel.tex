@@ -1,4 +1,32 @@
-\chapter{Wind Tunnel Validation and Model Tuning}
+\chapter{Wind Tunnel Testing and Model Tuning}
 \label{ch:windTunnel}
 
-The
+This chapter describes the wind-tunnel testing of MARGE and the tuning of the aeroservoelastic model to match the experimental data. It also discusses shortcomings of the data and lessons learned.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data Acquisition and Analysis} %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+MARGE's response was tested at the University of Washington's 3x3 low-speed wind tunnel. It was tested at six flight conditions, $q_D=\{60,100,163,207,281,343\}$ Pa. At each flight condition, the response to each of the four inputs was tested three times. For the gust vanes, a discrete 4-degree doublet gust was generated with a frequency of 1.45 Hz (approximately equivalent to the first wing bending natural frequency). For the ailerons, a 5-degree frequency sweep from 1 Hz to 2 Hz was performed. For the elevator, a 2-degree frequency sweep from 1 Hz to 2 Hz was performed. This frequency band was chosen as it encompassed the first wing bending mode and also stayed within the bandwidth of the actuators.
+
+The exception to the above is at $q_d=343$ Pa. At this dynamic pressure, the aileron sweeps were reduced in magnitude to 3.5 degrees and the elevator sweep was reduced in magnitude to 1 degree. This was done in order to reduce the risk of damage to the model due to violent responses at high speeds. <verify with john>
+
+All of these tests were controlled and recorded using Simulink Real-Time. The testing yielded time-series data of input commands and sensor readings for each test.
+
+\subsection{Data Postprocessing}
+The time-domain data was post-processed in a similar way as was done for the GVT data in Section \ref{sec:generateFRF}. Each run's data was truncated to start when the input began and end five seconds after the input ended. The data was re-centered to have zero mean and then the three runs of each test were concatenated.
+
+This single concatenated time-domain signal was then buffered into overlapping Hann windows and transformed using the CZT. The FRFs were then computing using Equation \ref{eq:frf}.
+
+\subsubsection{Accelerometer Data Postprocessing}
+
+bandwidth out [1,2]
+
+bandpass in [0.8,25]
+
+re-center
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Model Tuning} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
