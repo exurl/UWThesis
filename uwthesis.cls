@@ -708,7 +708,7 @@
       \count1=0
       \@whilenum \count1<\@Chair \do
        {\vskip12\p@ \baselineskip12pt
-        \csname C:\the\count1\endcsname
+        \csname C:\the\count1\endcsname, Chair
         \advance\count1 by1}
       \count1=0
       \@whilenum \count1<\@Sign \do
