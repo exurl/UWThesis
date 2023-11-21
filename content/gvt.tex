@@ -57,28 +57,33 @@ The frequency response functions for each of these concatenated SISO signal pair
 
 First, the signal was buffered into overlapping Hann windows and transformed using a chirp z-transform (CZT). The CZT is a generalization of the Discrete Fourier Transform (DFT) that can compute the Z-transform along an arc of the unit circle. Thus, it has an advantage over DFT in that it has the ability to allocate the full frequency-domain resolution to the bandwidth of interest. The purpose of first buffering the signal is to reduce the effect of noise at the expense of frequency resolution.
 
-The products of the CZT are the power spectra of the signals. For any given accelerometer power spectrum $S_y$ and impact hammer power spectrum $S_x$, the frequency response function can then be computed as
+The products of the CZT are the power spectra of the signals. For any given accelerometer power spectrum $S_y(\omega)$ and impact hammer power spectrum $S_x(\omega)$, the cross-spectrum correlation estimates can be computed as
 \begin{align}
-	\label{eq:frf}
-    FRF &= \frac{G_{yy}}{G_{yx}}
+    G_{xy}(\omega) &= S_x^* \cdot S_y(\omega) \\
+    G_{yx}(\omega) &= S_y^* \cdot S_x(\omega)
 \end{align}
-where
+and the autospectrum correlation estimates can be computed as
 \begin{align}
-    G_{yx}(\omega) &= S_y^* \cdot S_x \\
+    G_{xx}(\omega) &= |S_x|^2	 \\
     G_{yy}(\omega) &= |S_y|^2
 \end{align}
+
+Three possible ways to estimate the FRF from the above are the $H_1$ FRF, the $H_2$ FRF, and the $H_v$ FRF:
+\begin{align}
+    FRF_{H_1}(\omega) &= \frac{G_{xy}(\omega)}{G_{xx}(\omega)} \\
+    FRF_{H_2}(\omega) &= \frac{G_{yy}(\omega)}{G_{yx}(\omega)} \\
+    \label{eq:frf}
+    FRF_{H_v}(\omega) &= \sqrt{FRF_{H_1}(\omega) \cdot FRF_{H_2}(\omega)}
+\end{align}
+The $H_1$ estimate tends to under-estimate the FRF when there is noise in the input, while the $H_2$ estimate tends to over-estimate the FRF when there is noise at the output \cite{Tischler2012}. The $H_v$ estimate of the FRF is thus used in this study as a conservative choice which makes no assumption of the source or nature of noise in the system. (Subsequent references to the FRF can be assumed to refer to the $H_v$ FRF.)
+
 The coherence can also be computed as
 \begin{align}
     \operatorname{coh}(\omega) &= \frac{|G_{xy}|^2}{|G_{xx}||G_{yy}|}
     % (abs(Gxy_hat).^2)./(abs(Gxx_hat).*abs(Gyy_hat))
 \end{align}
-where
-\begin{align}
-    G_{xy}(\omega) &= S_x^* \cdot S_y \\
-    G_{yy}(\omega) &= |S_y|^2
-\end{align}
 
-The frequency response functions computed for the GVT data are shown in Appendix \ref{ch:appendix}.
+The frequency response functions and coherence computed for the GVT data are shown in Appendix \ref{ch:appendix}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Determining Modal Properties} %%%%%%%%%%%%%%%%%%%%%%%%%
