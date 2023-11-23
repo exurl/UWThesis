@@ -1,35 +1,31 @@
 \chapter{Finite Element Modeling}
 \label{ch:nastran}
 
-An aeroelastic finite element model of MARGE was previously constructed using NASTRAN. The model includes MARGE, the wind tunnel test section walls, and the gust vanes.
+An aeroelastic finite element model (FEM) of MARGE was previously constructed using NASTRAN. The model includes MARGE, the wind tunnel test section walls, and the gust vanes.
 
 % The structural model was constructed from classical beam elements and point masses. The 
 
-The wing structure and tail structure were each modeled as a single chain of Euler-Bernoulli beam elements along their respective spar. The wind tunnel walls were modeled as extremely stiff panels (which are approximately rigid).
-
-The area moments of inertia of the beam elements in the finite element model are reported in Table \ref{tab:beamInertia}.
+The wing structure and tail structure were each modeled as a single chain of Euler-Bernoulli beam elements along their respective spar. The wind tunnel walls were modeled as extremely rigid panels whose contribution to the structural dynamics of the FEM is negligible. The area moments of inertia and material properties of the beam elements in the finite element model are reported in Table \ref{tab:beamInertia}.
 \begin{table}[H]
     \centering
-    \caption{Area moment of inertia of beam finite elements}
-    \begin{tabular}{cccc}
+    \caption{Properties of Beam Finite Elements}
+    \begin{tabular}{lccccc}
         \hline\hline
-                  & $I_1$, m$^4$          & $I_2$, m$^4$         & $J$, m$^4$           \\
+                  & $E$, GPa & $G$, GPa & $I_1$, mm$^4$ & $I_2$, mm$^4$ & $J$, mm$^4$ \\
         \hline
-        wing spar & $2.541\times10^{-11}$ & $5.853\times10^{-8}$ & $5.856\times10^{-8}$ \\
-        tail spar & $1.829\times10^{-9}$  & $1.301\times10^{-8}$ & $1.484\times10^{-8}$ \\
-        fuselage  & $7.452\times10^{-11}$ & $4.476\times10^{-9}$ & $4.550\times10^{-9}$ \\
-        rigid     & $2.541\times10^{-11}$ & $5.853\times10^{-8}$ & $5.856\times10^{-8}$ \\
+        wing spar & $68.9$   & $0.0125$ & $25.41$       & $58530$       & $58560$     \\
+        tail spar & $68.9$   & $25.9$   & $1829$        & $13010$       & $14840$     \\
+        fuselage  & $200$    & $76.0$   & $74.52$       & $4476 $       & $4550 $     \\
+        rigid     & $10^4$   & $10^4$   & $25.41$       & $58530$       & $58560$     \\
         \hline\hline
     \end{tabular}
     \label{tab:beamInertia}
 \end{table}
+Note that the values in Table \ref{tab:beamInertia} (and also Table \ref{tab:nastranResult}) are the final values after corrections. The values before corrections and correction process are discussed in the following chapter.
 
-The aerodynamic loads on the NASTRAN model are based on the doublet-lattice model (DLM) of aerodynamics. This linear aerodynamic model assumes incompressible, inviscid, irrotational flow around thin lifting surfaces. The loads were transferred from the aerodynamic panels to the structural elements with NASTRAN
+The aerodynamic loads on the NASTRAN model are based on the doublet-lattice model (DLM) for aerodynamics. This linear aerodynamic model assumes incompressible, inviscid, irrotational flow around thin lifting surfaces. The loads on the aerodynamic panels were transferred to the structural nodes via a spline interpolation.
 
-The loads on the finite element model were determined using doublet-lattice lifting surface theory which is <insert>
-The loads on the aerodynamic panels were transferred to the structural nodes via a spline interpolation.
-
-The structural dynamic solution to the NASTRAN model yielded the natural modes which are described in the table below
+The structural dynamic solution to the FEM includes natural frequencies and mode shapes. These are summarized in Table \ref{tab:nastranResult}.
 \begin{table}[H]
 	\centering
 	\label{tab:nastranResult}
