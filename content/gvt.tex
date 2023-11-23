@@ -6,8 +6,14 @@ Ground vibration testing (GVT) was performed to validate the preliminary finite-
 Two sets of data were collected. The first set of data was collected with MARGE as designed, including the rigid-body pitching mode. This data was used to determine the damping ratios of the modes. The second set of data was collected with the root of the MARGE wing clamped to eliminate the rotational rigid-body mode. This was done to enable data acquisition of flexible-body modes without exciting and losing energy to the rigid-body mode. This data was used to tune the finite-element model and to determine the damping ratios of the wing bending modes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Test Setup} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Experiment} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This section describes the GVT setup and procedure.
+
+%---------------------------------------------------------------
+\subsection{Test Setup}
+%---------------------------------------------------------------
 
 The equipment used for the test include:
 \begin{itemize}
@@ -15,23 +21,32 @@ The equipment used for the test include:
     \item PCB Piezotronics ICP Accelerometer Model 352C22
     \item National Instruments DAQ Model NI-9234
 \end{itemize}
+The impact hammer and accelerometers were connected to the DAQ system which was connected to a personal computer via Ethernet. The computer interfaced with the DAQ system using the Data Acquisition Toolbox for MATLAB. Data was acquired at a rate of at least 6400 Hz.
 
-The impact hammer and accelerometers were connected to the DAQ system which was connected to a personal computer via Ethernet. The computer interfaced with the DAQ system using the Data Acquisition Toolbox for MATLAB.
-
-%---------------------------------------------------------------
-\subsection{Sensor Placement}
-%---------------------------------------------------------------
-
-The accelerometers were placed in locations such that all of the flexible natural modes of interest were observable. This was done by placing accelerometers near anti-nodal points of the natural modes as predicted by the preliminary finite-element model. The accelerometer locations for the two sets of testing are shown in Fig. \ref{fig:accelPlacement}. The impact hammer hits were also placed at these same locations on the structure as the accelerometers.
-
+The accelerometers were mounted in locations such that all of the flexible natural modes of interest were observable. This was done by placing accelerometers near anti-nodal points of the natural modes as predicted by the preliminary finite-element model. The accelerometer locations (and corresponding FEM node IDs) for the two sets of testing are shown in Fig. \ref{fig:accelPlacement}. The impact hammer hits were also placed at these same locations on the structure.
 \begin{figure}[h]
     \centering
+    \label{fig:accelPlacement}
     \includegraphics[width=4in]{figs/GVT/accelLocPlot.png}
     \caption{Accelerometer placement in ground vibration testing of MARGE}
-    \label{fig:accelPlacement}
 \end{figure}
 
 For the second dataset, pairs of accelerometers on the wing located a short distance apart chordwise were also treated as a fictional third accelerometer by taking the difference of their signals. This was done to simulate a sensor observing only torsional modes of the wing.
+
+%---------------------------------------------------------------
+\subsection{Test Procedure}
+%---------------------------------------------------------------
+
+Tests were performed by executing a MATLAB script which would prompt the user to name and record data. After data acquisition for a run the script automatically searched for the moment of impact generated a plot of the full time-series as well as a magnified plot of the time-series data around the impact. This magnified view was used to inspect for double-hits from the impact hammer. The script also automatically rejected data which was of insufficient length or which had too weak or strong of an impact from the hammer.
+
+After accelerometers were mounted to MARGE and the DAQ was connected to the host computer, the following procedure was used for each run of GVT:
+\begin{enumerate}
+	\item Start recording data
+	\item Hit the target point with the impact hammer
+	\item After at least five seconds has elapsed, stop recording data
+	\item Inspect the automatically-generated plot of the time-series data for irregularities, especially double-hits of the impact hammer or bumps of the accelerometers
+	\item Name and save the data
+\end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Generating Frequency Response Functions} %%%%%%%%%%%%%%
@@ -54,7 +69,7 @@ Each test point was recorded as three (in the second dataset) or five (in the fi
 
 The frequency response functions for each of these concatenated SISO signal pairs were computed using the method described in \cite{Tischler2012}. This section summarizes this method as it was implemented for the GVT data.
 
-First, the signal was buffered into overlapping Hann windows and transformed using a chirp z-transform (CZT). The CZT is a generalization of the Discrete Fourier Transform (DFT) that can compute the Z-transform along an arc of the unit circle. Thus, it has an advantage over DFT in that it has the ability to allocate the full frequency-domain resolution to the bandwidth of interest. The purpose of first buffering the signal is to reduce the effect of noise at the expense of frequency resolution.
+First, the signal was buffered into overlapping Hann windows and transformed using a chirp z-transform (CZT). The CZT has an advantage over the similar Discrete Fourier Transform (DFT) in that it has the ability to allocate the full frequency-domain resolution to the bandwidth of interest. The purpose of first buffering the signal is to reduce the effect of noise at the expense of frequency resolution.
 
 The products of the CZT are the power spectra of the signals. For any given accelerometer power spectrum $S_y(\omega)$ and impact hammer power spectrum $S_x(\omega)$, the cross-spectrum correlation estimates can be computed as
 \begin{align}
@@ -82,19 +97,19 @@ The coherence can also be computed as
     % (abs(Gxy_hat).^2)./(abs(Gxx_hat).*abs(Gyy_hat))
 \end{align}
 
-The frequency response functions and coherence computed for the GVT data are shown in Appendix \ref{ch:appendix}.
+The frequency response functions and coherence computed for the GVT data are shown in Appendix \ref{ap:gvtPlots}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Determining Modal Properties} %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Once the FRFs were computed, the frequencies and damping ratios of the natural modes were determined from the FRFs.
+Once the FRFs were obtained, the frequencies and damping ratios of the natural modes were computed from the FRFs. This section describes this computation.
 
 %---------------------------------------------------------------
 \subsection{Computing Natural Frequencies}
 %---------------------------------------------------------------
 
-First, visible natural frequencies visible as peaks in the data were noted. These often were visible across multiple FRFs, confirming that they were not artifacts from the noise of a single experimental trial.
+First, natural frequencies visible as peaks in the data were noted. These often were visible across multiple FRFs, confirming that they were not artifacts from the noise of a single experimental trial.
 
 These experimental natural frequencies were compared to those predicted by the NASTRAN finite-element model; if they matched well, it was assumed that the experimental natural frequency corresponded to the mode shape generated by the NASTRAN model. This could be further validated by observing the antinodal points of the relevant NASTRAN mode shape and checking that the FRFs in which the natural frequency peaks are visible correspond to sensors placed near those antinodal points.
 
@@ -111,13 +126,17 @@ The damping ratio was also measured in a similar automated way. The damping rati
 	\zeta &= \frac{\omega_2 - \omega_1}{2\omega_n}
 \end{align}
 where
-\begin{align}
-	\{\omega_1,\omega_2\} &= \left\{\omega \ \middle| \ FRF(\omega) = \frac{1}{2} FRF(\omega_n)\right\}
-\end{align}
-The median of all of these damping ratios, each from a different FRF was then taken to be the true damping ratio for that natural mode. The experimentally obtained natural frequencies and damping ratios can be found in Table \ref{tab:expModalData}.
+\begin{equation}
+\begin{gathered}
+	FRF(\omega_1) = FRF(\omega_2) = \frac{1}{2} FRF(\omega_n) \\
+	\omega_1 < \omega_2
+\end{gathered}
+\end{equation}
+The median of all of these damping ratios, each from a different FRF, was then taken to be the true damping ratio for that natural mode. The experimentally obtained natural frequencies and corresponding damping ratios can be found in Table \ref{tab:expModalData}.
 
 \begin{table}[H]
     \centering
+    \label{tab:expModalData}
     \caption{Experimental Natural Modes}
     \begin{tabular}{ccl}
         \hline\hline
@@ -135,11 +154,39 @@ The median of all of these damping ratios, each from a different FRF was then ta
         74.521 & 0.023 & fuselage bending 2 \\
         \hline\hline
     \end{tabular}
-    \label{tab:expModalData}
 \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Finite Element Model Correction} %%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The finite-element model was adjusted to better match the experimental GVT data. This was done by adjusting the bending and torsional stiffness of the various materials
+The finite-element model was adjusted to better match the experimental GVT data as well as static testing data from a separate study. This was done by adjusting the bending and torsional stiffness of the various materials until the natural frequencies best matched that of the experiment. The uncorrected and corrected natural frequencies of the FEM are compared to the experimental natural frequencies in Table \ref{tab:gvtCompare}. Note that damping ratios are not involved here, as the FEM does not model damping. The damping ratios are used only in the modeling in Chapter \ref{ch:sysModeling}.
+
+\begin{table}[H]
+	\centering
+	\label{tab:gvtCompare}
+	\caption{Natural Frequencies of Uncorrected FEM, Corrected FEM, and Experiment}
+	\begin{tabular}{cccl}
+		\hline\hline
+		Uncorrected FEM & Corrected FEM & Experiment & Description \\
+		\hline
+        0 & 0 &  & pitching \\
+		1.454401 & 1.44397 & 1.422 & wing bending 1 \\
+        10.51099 & 10.48667 & 10.142 & wing bending 2 \\
+        - & 19.1997 & 18.094 & wing twisting 1 \\
+        23.13519 & 21.94804 & 19.893 & fuselage in-plane bending 1 \\
+        17.81394 & 16.63828 & 19.897 & fuselage bending 1 \\
+        32.33148 & 32.31077 & 32.545 & wing bending 3 \\
+        - & - & 51.706 & wing twisting 2 \\
+        66.02579 & 66.01089 & 60.482 & wing bending 4 \\
+        69.7988 & 69.29826 & & wing in-plane bending 1 \\
+        62.68383 & 60.85218 & 74.521 & fuselage bending 2 \\
+        113.6852 & 113.6736 & & wing bending 5 \\
+        120.8188 & 120.6415 & & fuselage bending 3 \\
+        161.7024 & 153.716 & & fuselage in-plane bending 2 \\
+        175.9587 & 175.9407 & & wing bending 6 \\
+        159.36 & 160.9085 & & fuselage bending 4 \\
+        225.7709 & - & & fuselage bending 5 \\
+		\hline\hline
+	\end{tabular}
+\end{table}
