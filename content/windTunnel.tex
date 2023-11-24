@@ -12,7 +12,13 @@ MARGE's response was tested at the University of Washington's 3x3 low-speed wind
 
 The exception to the above is at $q_d=343$ Pa. At this dynamic pressure, the aileron sweeps were reduced in magnitude to 3.5 degrees and the elevator sweep was reduced in magnitude to 1 degree. This was done in order to reduce the risk of damage to the model due to violent responses at high speeds. <verify with john>
 
-All of these tests were controlled and recorded using Simulink Real-Time. The testing yielded time-series data of input commands and sensor readings for each test.
+All of these tests were controlled and recorded using Simulink Real-Time. The testing yielded time-series data of input commands and sensor readings for each test. An example of a single run of data is shown in Fig. \ref{fig:sampleWT}
+\begin{figure}[H]
+	\centering
+	\label{fig:sampleWT}
+	\includegraphics[width=6in]{figs/sampleWT.png}
+	\caption{Sample wind tunnel time-series data from a single run}
+\end{figure}
 
 \subsection{Data Postprocessing} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -22,12 +28,11 @@ This single concatenated time-domain signal was then buffered into overlapping H
 
 \subsubsection{Accelerometer Data Postprocessing} %%%%%%%%%%%%%%
 
-The output of the accelerometers contained significant noise and potentially contained electrical interference from other components in MARGE. Thus, the uncertainty in FRFs between inputs and the accelerometers was high. This was compensated for by filtering the time-series signal from accelerometers before postprocessing it and limiting the bandwidth of the FRFs produced to within a range in which the accelerometers tend to behave more consistently. The shortcomings in the hardware of MARGE, including the accelerometers, will be discussed further in Section \ref{sec:shortcomings}
+The output of the accelerometers contained significant noise and potentially contained electrical interference from other components in MARGE. Thus, the uncertainty in FRFs between inputs and the accelerometers was high. This was compensated for by specifically filtering the time-series signal from accelerometers before other postprocessing and limiting the bandwidth of the FRFs produced to within a range in which the accelerometers tend to behave more consistently. The shortcomings in the hardware of MARGE, including the accelerometers, will be discussed further in Section \ref{sec:shortcomings}
 
-Before going through the postprocessing steps outlined above, the time-series signal from the accelerometers was filtered using a bandpass filter which limited frequencies in the signal to between 0.8 Hz and 25 Hz. This was done to reduce the effect of both high-frequency noise and low-frequency drift in the acclerometer signals. This same bandpass filter was applied to the input signal when generating FRFs between an input and the accelerometers so that the filter would not skew the FRF.
+Before going through the postprocessing steps outlined above, the time-series signal from the accelerometers was filtered using a Butterworth bandpass filter which limited frequencies in the signal to between 0.8 Hz and 25 Hz. This was done to reduce the effect of both high-frequency noise and low-frequency drift in the acclerometer signals. This same bandpass filter was applied to the input signal when generating FRFs between an input and the accelerometers so that the filter would not skew the FRF.
 
 Unlike for other input-output combinations, all FRFs of an input to an accelerometer were only computed between 1 Hz and 2 Hz in the frequency domain. This was because the $H_1$ and $H_2$ FRFs diverged significantly outside of these bounds, indicating high uncertainty in the FRFs due to issues in the data (such as noise).
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Model Tuning} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,7 +128,7 @@ The resultant parameters and FRF comparison of the manually tuned model are show
 
 \subsection{Model Optimization} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The next step in tuning of MARGE's state-space model was to tune using optimization. Using MATLAB's \verb|fmincon| function, gradient-based optimization was used minimize the error between the model's FRFs and the experimental FRFs. In order to do this, an objective function was written which would perform the following computations:
+The next step in tuning of MARGE's state-space model was to tune using optimization. Using MATLAB's \verb|fmincon| function, gradient-based optimization was used minimize the error between the model's FRFs and the experimental FRFs by adjusting the tuning parameter design variables in Table \ref{tab:tuningParams}. In order to do this, an objective function was written which would perform the following computations:
 \begin{enumerate}
 	\item generate MARGE's state-space model
 	\item compute FRFs of the state-space model
@@ -141,6 +146,10 @@ First, the ``error'' in the magnitudes of the FRFs $\epsilon_\text{mag}$ and the
 	\label{eq:phaseCompare}
 	\epsilon_{ij \, \text{phase}} &= \sum_\omega \left( \angle FRF_\text{exp} (\omega) - \angle FRF_\text{model} (\omega) \right)
 \end{align}
+%The actual implementation of Eq. \ref{eq:phaseCompare} is augmented with a modulo operator to take the lowest phase difference between the experimental data point and the model data point. This avoids artifacts in phase measurements due to numerical computation of phase. Thus, $\epsilon_{ij \, \text{phase}}$ is more robustly computed as
+%\begin{align}
+%	\epsilon_{ij \, \text{phase}} &= \sum_\omega \left( \angle FRF_\text{exp} (\omega) - \angle FRF_\text{model} (\omega)
+%\end{align}
 The magnitude and phase errors are then combined in a weighted sum to create the total error $f$ for an FRF. The weight $\lambda$ determines whether the error magnitude or the error in phase is more important in the optimization. This weight is set by the user.
 \begin{align}
 	f_{ij}(\{x\}) &= \epsilon_{ij \, \text{mag}} \sqrt{\lambda} + \epsilon_{ij \, \text{phase}} \frac{1}{\sqrt{\lambda}}
@@ -150,7 +159,30 @@ Finally the errors $f$ for each FRF (corresponding to input-output pairs) are su
 	F(\{x\}) &= \sum_{i=1}^{N_\text{in}} \sum_{j=1}^{N_\text{out}} f_{i,j}(\{x\})
 \end{align}
 
-%The actual implementation of Eq. \ref{eq:phaseCompare} is augmented with a modulo operator to take the lowest phase difference between the experimental data point and the model data point. This avoids artifacts in phase measurements due to numerical computation of phase. Thus, $\epsilon_{ij \, \text{phase}}$ is more robustly computed as
-%\begin{align}
-%	\epsilon_{ij \, \text{phase}} &= \sum_\omega \left( \angle FRF_\text{exp} (\omega) - \angle FRF_\text{model} (\omega)
-%\end{align}
+\subsubsection{Design Variable Bounds} %%%%%%%%%%%%%%%%%%%%%%%%%
+The tuning parameter design variables must be optimized within a bounded domain in order to guarantee a finite and physical solution. Thus, lower and upper bounds were placed on each design variable based on physical constraints and the level of expected uncertainty in the initial value. The bounds set on the design variables are listed in Table \ref{tab:optBounds}.
+\begin{table}[H]
+	\centering
+	\label{tab:optBounds}
+	\caption{Bounds of MARGE Tuning Parameter Design Variables}
+	\begin{tabular}{ccc}
+		\hline\hline
+		Name & Lower Bound & Upper Bound \\
+		\hline
+		$\omega_{n,2}$ & $0.9\times1.4544$ & $1.1\times1.4544$ \\
+		$\zeta_1$ & 0 & $\infty$ \\
+		$\zeta_2$ & $0.5\times0.028$ & $2\times0.028$ \\
+		$\tau_\text{ail1}$ & 0 & 1 \\
+		$\tau_\text{ail2}$ & 0 & 1 \\
+		$\tau_\text{elev}$ & 0 & 1 \\
+		$\tau_\text{gust}$ & 0 & 1 \\
+		$\left[\tau_{P_{ss1}}\right]$ & $\begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix}$ & $\begin{bmatrix} \infty & \infty \\ \infty & \infty \end{bmatrix}$ \\
+		$\left[\tau_{P_{ss2}}\right]$ & $\begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix}$ & $\begin{bmatrix} \infty & \infty \\ \infty & \infty \end{bmatrix}$ \\
+		$\left[\tau_{P_{ss3}}\right]$ & $\begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix}$ & $\begin{bmatrix} \infty & \infty \\ \infty & \infty \end{bmatrix}$ \\
+		\hline\hline
+	\end{tabular}
+\end{table}
+Note that all damping ratios are constrained to be positive. Also, all of the aerodynamic multipliers are bounded between zero and one. This is because linear aerodynamics is expected to overpredict forces, and thus a multiplier less than one is expected.
+
+The result
+
