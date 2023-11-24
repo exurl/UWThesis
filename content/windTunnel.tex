@@ -6,6 +6,7 @@ This chapter describes the wind-tunnel testing of MARGE and the tuning of the ae
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Data Acquisition and Analysis} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:wtDAQ}
 
 MARGE's response was tested at the University of Washington's 3x3 low-speed wind tunnel. It was tested at six flight conditions, $q_D=\{60,100,163,207,281,343\}$ Pa. At each flight condition, the response to each of the four inputs was tested three times. For the gust vanes, a discrete 4-degree doublet gust was generated with a frequency of 1.45 Hz (approximately equivalent to the first wing bending natural frequency). For the ailerons, a 5-degree frequency sweep from 1 Hz to 2 Hz was performed. For the elevator, a 2-degree frequency sweep from 1 Hz to 2 Hz was performed. This frequency band was chosen as it encompassed the first wing bending mode and also stayed within the bandwidth of the actuators.
 
@@ -65,9 +66,9 @@ A summary of tuning parameters and their default values (which apply no correcti
 		$\tau_\text{ail2}$ & 1 & aileron 2 effectiveness \\
 		$\tau_\text{elev}$ & 1 & elevator effectiveness \\
 		$\tau_\text{gust}$ & 1 & gust vane effectiveness \\
-		$\left[\tau_{P_{ss1}}\right]$ & all ones & scaling lift from state \\
-		$\left[\tau_{P_{ss2}}\right]$ & all ones & scaling lift from state rates \\
-		$\left[\tau_{P_{ss3}}\right]$ & all ones & scaling lift from state accelerations \\
+		$\left[\tau_{P_{ss1}}\right]$ & $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$ & scaling lift from state \\
+		$\left[\tau_{P_{ss2}}\right]$ & $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$ & scaling lift from state rates \\
+		$\left[\tau_{P_{ss3}}\right]$ & $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$ & scaling lift from state accelerations \\
 		\hline\hline
 	\end{tabular}
 \end{table}
@@ -82,8 +83,6 @@ A summary of tuning parameters and their default values (which apply no correcti
 \end{figure}
 
 \end{landscape}
-
-
 
 \subsection{Manual Model Tuning} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -105,9 +104,9 @@ The resultant parameters and FRF comparison of the manually tuned model are show
 		$\tau_\text{ail2}$ & 1 & 0.7 \\
 		$\tau_\text{elev}$ & 1 & 0.6 \\
 		$\tau_\text{gust}$ & 1 & N/A \\
-		$\left[\tau_{P_{ss1}}\right]$ & all ones & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
-		$\left[\tau_{P_{ss2}}\right]$ & all ones & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
-		$\left[\tau_{P_{ss3}}\right]$ & all ones & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
+		$\left[\tau_{P_{ss1}}\right]$ & $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$ & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
+		$\left[\tau_{P_{ss2}}\right]$ & $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$ & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
+		$\left[\tau_{P_{ss3}}\right]$ & $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$ & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
 		\hline\hline
 	\end{tabular}
 \end{table}
@@ -125,8 +124,16 @@ The resultant parameters and FRF comparison of the manually tuned model are show
 
 \subsection{Model Optimization} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+The next step in tuning of MARGE's state-space model was to tune using optimization. Using MATLAB's \verb|fmincon| function, gradient-based optimization was used minimize the error between the model's FRFs and the experimental FRFs. In order to do this, an objective function was written which would perform the following computations:
+\begin{enumerate}
+	\item generate MARGE's state-space model
+	\item compute FRFs of the state-space model
+	\item compute a scalar measure of the difference between the model's FRFs and the experimental FRFs
+\end{enumerate}
+The first two computations were discussed in Chapter \ref{ch:sysModeling} and Section \ref{sec:wtDAQ}.
 
-obj
+The third computation, the scalar measure of difference between FRFs, is as follows:
+First, the difference in the magnitudes of the FRFs and the difference in the phase of the FRFs are computed at several frequencies. Each difference in magnitude is normalized by the experimental magnitude at that frequency. The differences in phase are not normalized since they are already non-dimensional. These magnitude and phase errors for various frequencies in various FRFs are summed up to 
 \begin{align}
 	F(\{x\}) &= \sum_{i=1}^{N_\text{in}} \sum_{j=1}^{N_\text{out}} f_{i,j}(\{x\}) \\
 	f_{ij}(\{x\}) &= \epsilon_{ij \, \text{mag}} \sqrt{\lambda} + \epsilon_{ij \, \text{phase}} \frac{1}{\sqrt{\lambda}}
