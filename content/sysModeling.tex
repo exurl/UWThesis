@@ -11,10 +11,9 @@ The goal of this section is to derive a preliminary state-space model for the MA
 \end{equation}
 based on first principles.
 
-% +----------------------------------------------------------------------------+
-% | PLANT DYNAMICS                                                             |
-% +----------------------------------------------------------------------------+
-\section{Plant Dynamics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Plant Dynamics} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This section will derive the plant dynamics for MARGE in the form
 \begin{align}
@@ -22,8 +21,7 @@ This section will derive the plant dynamics for MARGE in the form
 	s \{x\} = [A_p]\{x_p\}+[B_p]\{u_p\}
 \end{align}
 
-% STRUCTURAL DYNAMICS ----------------------------------------------------------
-\subsection{Structural Dynamics}
+\subsection{Structural Dynamics} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 MARGE's structure is modeled as a linear, second-order system with damping and external forcing. The equations of motion for such a system are
 \begin{align}
@@ -122,8 +120,7 @@ Note that since the control modes are rigid-body modes, they have no stiffness a
     % \end{bmatrix} \frac{w_G}{U}
 \end{multline}
 
-% THE ROGER APPROXIMATION ------------------------------------------------------
-\subsection{The Roger Approximation}
+\subsection{The Roger Approximation} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % The aerodynamic influence matrices $[A]$ and $[A_G]$ are nonlinear functions of frequency. In order to obtain a linear state-space system, these must be approximated as analytic functions of $s$.
 The aerodynamic influence matrix $[A]$ is a function of the Laplace variable $s$. For a thin airfoil oscillating in a potential flow, Theodorsen's solution applies \cite{Theodorsen1949}. This solution is nonlinear and unable to be represented in a linear system. In order to obtain the linear state-space system, $[A]$ must be approximated as an analytic function of $s$.
@@ -199,8 +196,7 @@ It should be noted that the Roger approximation is only valid over the tabulated
 \end{align}
 where $\omega_\text{max}$ is the maximum frequency of interest in the analysis. Thus, modeling which utilizes the Roger Approximation cannot be used for purely structural dynamic analysis (where $U=0$).
 
-% COUPLED AEROELASTIC DYNAMICS -------------------------------------------------
-\subsection{Coupled Aeroelastic Dynamics}
+\subsection{Coupled Aeroelastic Dynamics} %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This section describes how the structural dynamic equations of motion can be reduced to the form in Eq. \ref{eq:ssPlant}.
 
@@ -373,10 +369,9 @@ Then, Eq. \ref{eq:plantSS} can be written in the form that is desired:
 \end{align}
 where $[A_p]$ and $[B_p]$ are the block matrices in Eq. \ref{eq:plantSS}.
 
-% +----------------------------------------------------------------------------+
-% | PLANT OUTPUT MODELING                                                      |
-% +----------------------------------------------------------------------------+
-\section{Plant Output Modeling}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Plant Output Modeling} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This section will derive the output equations for MARGE in the form
 \begin{align}
@@ -429,8 +424,7 @@ where $[T_\text{vel}]$ is a matrix which extracts the $\{x_2\}$ component of $\{
 	[T_\text{vel}] &= \begin{bmatrix} [0]_{n_s \times n_s} & [I]_{n_s \times n_s} & [0]_{n_s \times n_\text{lag}} \end{bmatrix}
 \end{align}
 
-% ACCELERATION OUTPUT ----------------------------------------------------------
-\subsection{Acceleration Output}
+\subsection{Acceleration Output} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The system's accelerations at DOF $i$ can then be expressed as
 \begin{align}
@@ -457,8 +451,7 @@ For the three accelerometer locations (DOFs) on MARGE with corresponding modal m
 	\end{bmatrix} \{u_p(t)\}
 \end{align}
 
-% PITCH OUTPUT -----------------------------------------------------------------
-\subsection{Pitch Output}
+\subsection{Pitch Output} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 For the pitch output which is a measure of position instead of acceleration, Eq. \ref{eq:positionOut} is used instead:
 \begin{align}
@@ -470,8 +463,7 @@ The corresponding pitch rate output is similarly given by \ref{eq:velocityOut}
 \end{align}
 Note that the pitch rate output uses the same DOF in the mode shape ($\phi^5$) as the pitch output.
 
-% STRAIN OUTPUT ----------------------------------------------------------------
-\subsection{Strain Output}
+\subsection{Strain Output} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The structural dynamic generalized state $\{q\}$ has modal coordinates which also correspond to the load (force or moment) at each DOF in each of $n_s$ mode shapes of the structure $\{\psi_1\}, \dots, \{\psi_{n_s}\}$. (This is also known from the finite element model.) The loading state of the system in physical coordinates $\{L(t)\}$ is
 \begin{align}
@@ -531,10 +523,9 @@ Thus, the plant output of MARGE has been derived the form that is desired
 \end{align}
 where $[C_p]$ and $[D_p]$ are the block matrices in Eq. \ref{eq:plantOutputSS}.
 
-% +----------------------------------------------------------------------------+
-% | ACTUATION AND SENSING DYNAMICS                                             |
-% +----------------------------------------------------------------------------+
-\section{Actuation and Sensing Dynamics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Actuation and Sensing Dynamics} %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 When developing a model that is used for control design, the dynamics of the actuators and sensors must be accounted for. The output of the control law will be fed not into the plant, but the imperfect actuators. The input of the control law will come not directly from the plant, but from the imperfect sensors. Thus, the goal of this section is to determine dynamic models for the actuators and the sensors in the forms
 \begin{equation}
@@ -551,10 +542,19 @@ and
 \end{aligned}
 \end{equation}
 
+\subsection{Control Surfaces} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 The servo-actuated control surfaces on the wing and tail are known (from \cite{Quenzer2019}) to have dynamics according to the following transfer function\footnote{The numerator of this transfer function differs from that defined in \cite{Quenzer2019} because the actuator is calibrated to have unity DC gain before use.}:
 \begin{align}
     G(s) &= \frac{1461}{s^2 + 62.2s + 1461}
 \end{align}
+This transfer function has the response shown in Figure \ref{fig:servoInputDynamics}.
+\begin{figure}[H]
+	\centering
+	\label{fig:servoInputDynamics}
+	\includegraphics[width=4in]{servoInputDynamics.png}
+	\caption{Bode plot of actuator transfer function}
+\end{figure}
 This transfer function was then converted to the following equivalent state-space representation:
 \begin{equation}
 \begin{aligned}
@@ -566,6 +566,8 @@ This transfer function was then converted to the following equivalent state-spac
 \end{equation}
 where $u$ is the input, $y$ is the output, and $\{x\}$ is the internal state of the actuator.
 
+\subsection{Gust Vanes} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 The wind tunnel gust vanes were measured to have ``perfect'' dynamics except for a pure time delay of 0.34 seconds. This pure delay was approximated as a second-order transfer function using a Pad\'e approximant:
 \begin{align}
     G(s) &= \frac{s^2 - 176.47s + 10381}{s^2 + 176.47s + 10381}
@@ -573,7 +575,7 @@ The wind tunnel gust vanes were measured to have ``perfect'' dynamics except for
 The Pad\'e approximant matches the pure delay's response well in the frequency range of interest (<20 Hz); the step response and phase shift behavior of a pure delay and the Pad\'e approximant are compared in Fig. \ref{fig:padeApprox}.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=4in]{padeApprox.png}
+    \includegraphics[width=4in]{gustInputDynamics.png}
     \label{fig:padeApprox}
     \caption{Pad\'e approximant of the pure-delay response of the wind tunnel gust vanes}
 \end{figure}
@@ -588,6 +590,8 @@ This transfer function was then converted to the following equivalent state-spac
 \end{aligned}
 \end{equation}
 where $u$ is the input, $y$ is the output, and $\{x\}$ is the internal state of the actuator.
+
+\subsection{Combined Actuation and Sensing} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The state-space models for the four actuators (three servo-actuated control surfaces and one pair of wind tunnel gust vanes) are combined to form one combined state-space model for all actuators with input, output, and state
 \begin{align}
@@ -620,10 +624,9 @@ A similar process would be appropriate for a set of imperfect sensors. However, 
 \end{align}
 In other words, the output of the sensor was taken as the output of the plant. This then forms the sensor block shown in Fig. \ref{fig:actPlantSens}.
 
-% +----------------------------------------------------------------------------+
-% | COUPLED AEROSERVOELASTIC MODELING                                          |
-% +----------------------------------------------------------------------------+
-\section{Coupled Aeroservoelastic Modeling}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Coupled Aeroservoelastic Modeling} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The imperfect actuators and sensors can be accounted for in modeling by combining the actuator, plant, and sensor models into an integrated system model that can then be used for control design; see Fig. \ref{fig:actPlantSens} for a block diagram of this system of systems.
 \begin{figure}[h]
