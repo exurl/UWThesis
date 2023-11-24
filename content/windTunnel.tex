@@ -35,6 +35,8 @@ re-center <insert>
 
 The state-space model generated in Chapter \ref{ch:sysModeling} was adjusted such that its frequency response fit the experimental frequency response. This was done by adjusting certain parameters in the model that each represented some uncertainty in the model's physical characteristics. This adjustment was first done by hand, and then repeated in a automated process through optimization.
 
+For this section, unless otherwise indicated, the state-space model was generated using $N_s=2$ structural dynamic modes and $N_\text{lag}=0$ lag terms in the Roger Approximation. This was done in order to obtain a low-order model which still could accurately capture the dynamics at low frequencies, such as those in the bandwidth of the actuators.
+
 \subsection{Tuning Parameters} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The state-space model derived in Chapter \ref{ch:sysModeling} assumes linear structural dynamics, linear aerodynamics, and thin airfoils. It also requires perfect knowledge of mode shapes. In reality, MARGE does not conform to any of these assumptions perfectly. Thus, tuning parameters were implemented in the state-space model generation script which adjusted the structural and aerodynamic modeling to compensate.
@@ -63,7 +65,9 @@ A summary of tuning parameters and their default values (which apply no correcti
 		$\tau_\text{ail2}$ & 1 & aileron 2 effectiveness \\
 		$\tau_\text{elev}$ & 1 & elevator effectiveness \\
 		$\tau_\text{gust}$ & 1 & gust vane effectiveness \\
-		$\left[\tau_{P_{ss}}\right]$ & all ones & lift scaling \\
+		$\left[\tau_{P_{ss1}}\right]$ & all ones & scaling lift from state \\
+		$\left[\tau_{P_{ss2}}\right]$ & all ones & scaling lift from state rates \\
+		$\left[\tau_{P_{ss3}}\right]$ & all ones & scaling lift from state accelerations \\
 		\hline\hline
 	\end{tabular}
 \end{table}
@@ -101,7 +105,9 @@ The resultant parameters and FRF comparison of the manually tuned model are show
 		$\tau_\text{ail2}$ & 1 & 0.7 \\
 		$\tau_\text{elev}$ & 1 & 0.6 \\
 		$\tau_\text{gust}$ & 1 & N/A \\
-		$\left[\tau_{P_{ss}}\right]$ & all ones & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
+		$\left[\tau_{P_{ss1}}\right]$ & all ones & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
+		$\left[\tau_{P_{ss2}}\right]$ & all ones & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
+		$\left[\tau_{P_{ss3}}\right]$ & all ones & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
 		\hline\hline
 	\end{tabular}
 \end{table}
