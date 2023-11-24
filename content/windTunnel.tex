@@ -86,7 +86,7 @@ A summary of tuning parameters and their default values (which apply no correcti
 
 \subsection{Manual Model Tuning} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The first step in tuning was experimenting with manual changes to the tuning parameters with the goal of closing the gap between the model's FRF and the experimental FRF. This was done by thinking intuitively about the modeling uncertainties which are most likely effecting the known discrepancies in the FRFs. For example, it was known that linear aerodynamics would overpredict the control surface effectiveness by up to 50\% even in reasonably small ($<10^\circ$) deflections \cite{young1947,riebe1955}. Thus, the control effectiveness of the ailerons and elevator were lowered until the FRFs with these controls as inputs better matched the experimental FRFs in magnitude.
+The first step in tuning was experimenting with manual changes to the tuning parameters with the goal of closing the gap between the model's FRF and the experimental FRF. This was done by thinking intuitively about the modeling uncertainties which are most likely effecting the known discrepancies in the FRFs. For example, it was known that linear aerodynamics would overpredict the control surface effectiveness by up to 50\% even in reasonably small ($<10^\circ$) deflections \cite{Young1947,Riebe1955}. Thus, the control effectiveness of the ailerons and elevator were lowered until the FRFs with these controls as inputs better matched the experimental FRFs in magnitude.
 
 The resultant parameters and FRF comparison of the manually tuned model are shown below in Table \ref{tab:manualTuning} and Fig. \ref{fig:manualTunedFRF}. The poor fit in Fig \ref{fig:manualTunedFRF} indicates that the simple and ``intuitive'' manual tuning is not sufficient to completely match the experiment.
 \begin{table}[h]
@@ -132,7 +132,7 @@ The next step in tuning of MARGE's state-space model was to tune using optimizat
 \end{enumerate}
 The first two computations were discussed in Chapter \ref{ch:sysModeling} and Section \ref{sec:wtDAQ}.
 
-The third computation, the scalar measure of difference between FRFs, is as follows:
+The third computation, the scalar measure of difference between FRFs, is as performed follows:
 First, the difference in the magnitudes of the FRFs and the difference in the phase of the FRFs are computed at several frequencies. Each difference in magnitude is normalized by the experimental magnitude at that frequency. The differences in phase are not normalized since they are already non-dimensional. These magnitude and phase errors for various frequencies in various FRFs are summed up to 
 \begin{align}
 	F(\{x\}) &= \sum_{i=1}^{N_\text{in}} \sum_{j=1}^{N_\text{out}} f_{i,j}(\{x\}) \\

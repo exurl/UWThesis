@@ -23,7 +23,7 @@ The wing structure and tail structure were each modeled as a single chain of Eul
 \end{table}
 Note that the values in Table \ref{tab:beamInertia} (and also Table \ref{tab:nastranResult}) are the final values after corrections. The values before corrections and correction process are discussed in the following chapter.
 
-The aerodynamic loads on the NASTRAN model are based on the doublet-lattice model (DLM) for aerodynamics. This linear aerodynamic model assumes incompressible, inviscid, irrotational flow around thin lifting surfaces. The loads on the aerodynamic panels were transferred to the structural nodes via a spline interpolation. The aerodynamic panels and structural finite elements can be seen in Fig. \ref{fig:nastranWindowFull}. Figure \ref{fig:nastranWindowClose} shows a close-up view of MARGE in the FEM.
+The aerodynamic loads on the NASTRAN model are based on the doublet-lattice model (DLM) for aerodynamics. This linear aerodynamic model assumes incompressible, inviscid, irrotational flow around thin lifting surfaces. The loads on the aerodynamic panels were transferred to the structural nodes via a spline interpolation. The aerodynamic panels and structural finite elements can be seen in Fig. \ref{fig:nastranWindowFull}. Figure \ref{fig:nastranWindowClose} shows a close-up view of MARGE in the FEM. Details of the implementations and limitations of these theories can be found in the NASTRAN Aeroelastic Analysis User's Guide \cite{Siemens2020}
 
 The structural dynamic solution to the FEM includes natural frequencies and mode shapes. These are summarized in Table \ref{tab:nastranResult}.
 \begin{table}[H]
