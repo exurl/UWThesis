@@ -44,11 +44,11 @@ For this section, unless otherwise indicated, the state-space model was generate
 
 \subsection{Tuning Parameters} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The state-space model derived in Chapter \ref{ch:sysModeling} assumes linear structural dynamics, linear aerodynamics, and thin airfoils. It also requires perfect knowledge of mode shapes. In reality, MARGE does not conform to any of these assumptions perfectly. Thus, tuning parameters were implemented in the state-space model generation script which adjusted the structural and aerodynamic modeling to compensate.
+The state-space model derived in Chapter \ref{ch:sysModeling} assumes linear structural dynamics, linear aerodynamics, and thin airfoils. It also requires perfect knowledge of mode shapes. In reality, MARGE does not conform to any of these assumptions perfectly. Thus, tuning parameters were implemented in the state-space model generation script which adjusted the structural and aerodynamic modeling to compensate for these nonlinearities and inaccuracies.
 
-The first tuning parameter is the first wing bending natural frequency $\omega_{n,2}$. This quantity has a low uncertainty, but was treated as a tuning parameter for purposes of investigation.
+The first tuning parameter is the first wing bending natural frequency $\omega_{n2}$. This quantity has a low uncertainty, but was treated as a tuning parameter for purposes of investigation.
 
-The next tuning parameters are the damping ratios $\zeta$ for the modes. These have higher uncertainty since viscous damping is not the most physically accurate model for structural damping. Furthermore, aerodynamic damping of motions is not accounted for in the model. These can be compensated for by adjusting the damping ratios with this tuning parameter.
+The next tuning parameters are the damping ratios $\zeta$ for the modes. These have higher uncertainty since viscous damping is not the most physically accurate model for structural damping. Furthermore, aerodynamic damping of motions is not accounted for in the model. These can be compensated for by adjusting the damping ratios of the modes to capture all the mechanisms of damping in one place.
 
 The next tuning parameters are the effectiveness $\tau$ of the controls. Each control surface will not be as effective as predicted by the linear aerodynamic model due to airfoil thickness, viscous effects (such as flow separation), roughness, and gaps in construction. These can be compensated for by adjusting the control effectiveness of each control surface. These tuning parameters scale the forces predicted for the control surfaces by the linear aerodynamic model.
 
@@ -75,7 +75,7 @@ A summary of tuning parameters and their default values (which apply no correcti
 		\hline\hline
 	\end{tabular}
 \end{table}
-Note that Table \ref{tab:tuningParams} applies for the case of $N_s=2$ structural dynamic modes used in modeling. When a higher number of modes is used, $\zeta_i$ continues to take the values of damping ratio results from GVT (found in Table \ref{tab:expModalData}) and the Roger matrices $[P_i]$ are a larger matrix of ones.
+Note that Table \ref{tab:tuningParams} applies for the case of $N_s=2$ structural dynamic modes used in modeling. When a higher number of modes is used, $\{\zeta\}$ continues to extend with damping ratios of higher modes from the GVT results (found in Table \ref{tab:expModalData}) and the Roger matrix scaling factors $[\tau_{P_{ssi}}]$ are a larger matrix of ones.
 
 \begin{landscape}
 
@@ -83,16 +83,16 @@ Note that Table \ref{tab:tuningParams} applies for the case of $N_s=2$ structura
 	\centering
 	\label{fig:noTuneFRF}
 	\includegraphics[width=9in]{figs/FRFcompare_noTune_q207.png}
-	\caption{A comparison of experimental FRFs and untuned model FRFs. The grey region is enclosed by the experimental $H_1$ FRF below and the experimental $H_2$ FRF above.}
+	\caption{A comparison of experimental FRFs and untuned model FRFs at $q=207$ Pa. The grey region is enclosed by the experimental $H_1$ FRF below and the experimental $H_2$ FRF above.}
 \end{figure}
 
 \end{landscape}
 
 \subsection{Manual Model Tuning} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The first step in tuning was experimenting with manual changes to the tuning parameters with the goal of closing the gap between the model's FRF and the experimental FRF. This was done by thinking intuitively about the modeling uncertainties which are most likely effecting the known discrepancies in the FRFs. For example, it was known that linear aerodynamics would overpredict the control surface effectiveness by up to 50\% even in reasonably small ($<10^\circ$) deflections \cite{Young1947,Riebe1955}. Thus, the control effectiveness of the ailerons and elevator were lowered until the FRFs with these controls as inputs better matched the experimental FRFs in magnitude.
+The first step in tuning the model was experimenting with manually tuning the parameters with the goal of closing the gap between the model's FRF and the experimental FRF. This was done by thinking intuitively about the modeling uncertainties which are most likely effecting the known discrepancies in the FRFs. For example, it was known that linear aerodynamics would overpredict the control surface effectiveness by up to 50\% even in reasonably small ($<10^\circ$) deflections \cite{Young1947,Riebe1955}. Thus, the control effectiveness of the ailerons and elevator were lowered until the FRFs with these controls as inputs better matched the experimental FRFs in magnitude.
 
-The resultant parameters and FRF comparison of the manually tuned model are shown below in Table \ref{tab:manualTuning} and Fig. \ref{fig:manualTunedFRF}. The poor fit in Fig \ref{fig:manualTunedFRF} indicates that the simple and ``intuitive'' manual tuning is not sufficient to completely match the experiment.
+The resultant parameters and FRF comparison of the manually tuned model are shown below in Table \ref{tab:manualTuning} and Fig. \ref{fig:manualTunedFRF}. The poor alignment between the model and experiment in Fig \ref{fig:manualTunedFRF} indicates that the simple and ``intuitive'' manual tuning is not sufficient to completely match the experiment.
 \begin{table}[h]
 	\centering
 	\label{tab:manualTuning}
@@ -101,9 +101,9 @@ The resultant parameters and FRF comparison of the manually tuned model are show
 		\hline\hline
 		Name & Default Value & Adjusted Value \\
 		\hline
-		$\omega_{n,2}$ & 1.4544 & N/A \\
+		$\omega_{n,2}$ & 1.4544 & 1.4544 \\
 		$\zeta_1$ & 0 & 60 \\
-		$\zeta_2$ & 0.028 & N/A \\
+		$\zeta_2$ & 0.028 & 0.028 \\
 		$\tau_\text{ail1}$ & 1 & 0.6 \\
 		$\tau_\text{ail2}$ & 1 & 0.7 \\
 		$\tau_\text{elev}$ & 1 & 0.6 \\
@@ -142,9 +142,9 @@ The third computation, the scalar measure of difference between FRFs, is perform
 First, the ``error'' in the magnitudes of the FRFs $\epsilon_\text{mag}$ and the ``error'' in the phase of the FRFs $\epsilon_\text{phase}$ are computed and summed across several frequencies in Eq. \ref{eq:magCompare} and \ref{eq:phaseCompare} respectively. Each difference in magnitude is normalized by the experimental magnitude at that frequency. The differences in phase are not normalized since they are already non-dimensional (in radians).
 \begin{align}
 	\label{eq:magCompare}
-	\epsilon_{ij \, \text{mag}}(\{x\}) &= \sum_\omega \frac{|FRF_\text{exp} (\omega)| - |FRF_\text{model}(\{x\}) (\omega)|}{|FRF_\text{exp} (\omega)|} \\
+	\epsilon_{ij \, \text{mag}}(\{x\}) &= \sum_\omega \frac{|FRF_\text{exp} (\omega)| - |FRF_\text{model}(\{x\},\omega)|}{|FRF_\text{exp} (\omega)|} \\
 	\label{eq:phaseCompare}
-	\epsilon_{ij \, \text{phase}}(\{x\}) &= \sum_\omega \left( \angle FRF_\text{exp} (\omega) - \angle FRF_\text{model}(\{x\}) (\omega) \right)
+	\epsilon_{ij \, \text{phase}}(\{x\}) &= \sum_\omega \left( \angle FRF_\text{exp} (\omega) - \angle FRF_\text{model}(\{x\},\omega) \right)
 \end{align}
 %The actual implementation of Eq. \ref{eq:phaseCompare} is augmented with a modulo operator to take the lowest phase difference between the experimental data point and the model data point. This avoids artifacts in phase measurements due to numerical computation of phase. Thus, $\epsilon_{ij \, \text{phase}}$ is more robustly computed as
 %\begin{align}
@@ -154,14 +154,17 @@ The magnitude and phase errors are then combined in a weighted sum to create the
 \begin{align}
 	f_{ij}(\{x\}) &= \epsilon_{ij \, \text{mag}}(\{x\}) \sqrt{\lambda} + \epsilon_{ij \, \text{phase}}(\{x\}) \frac{1}{\sqrt{\lambda}}
 \end{align}
-Finally the errors $f$ for each FRF (corresponding to input-output pairs) are summed to create a total error for MARGE. This is the objective function that the optimization algorithm minimizes.
+Finally the errors $f$ for each FRF (corresponding to input-output pairs) are summed to create a total error $F$ for MARGE. This is the objective function that the optimization algorithm minimizes.
 \begin{align}
-	F(\{x\}) &= \sum_{i=1}^{N_\text{in}} \sum_{j=1}^{N_\text{out}} f_{i,j}(\{x\})
+	F(\{x\}) &= \sum_{i=1}^{N_\text{in}} \sum_{j=1}^{N_\text{out}} f_{ij}(\{x\})
 \end{align}
 
 \subsubsection{Design Variable Bounds} %%%%%%%%%%%%%%%%%%%%%%%%%
-The tuning parameter design variables must be optimized within a bounded domain in order to guarantee a finite and physical solution. Thus, lower and upper bounds were placed on each design variable based on physical constraints and the level of expected uncertainty in the initial value. The bounds set on the design variables are listed in Table \ref{tab:optBounds}.
-\begin{table}[H]
+The tuning parameter design variables must be optimized within a bounded domain in order to guarantee a finite and physical solution. Thus, lower and upper bounds were placed on the design variables based on physical constraints and the level of expected uncertainty in the initial value. The bounds set on the design variables are listed in Table \ref{tab:optBounds}.
+
+Note that all damping ratios are constrained to be positive. Also, all of the aerodynamic multipliers are bounded between zero and one. This is because linear aerodynamics is expected to overpredict forces, and thus a multiplier less than one is expected.
+
+\begin{table}[h]
 	\centering
 	\label{tab:optBounds}
 	\caption{Bounds of MARGE Tuning Parameter Design Variables}
@@ -182,11 +185,10 @@ The tuning parameter design variables must be optimized within a bounded domain 
 		\hline\hline
 	\end{tabular}
 \end{table}
-Note that all damping ratios are constrained to be positive. Also, all of the aerodynamic multipliers are bounded between zero and one. This is because linear aerodynamics is expected to overpredict forces, and thus a multiplier less than one is expected.
 
 \subsubsection{Optimization Results}
 
-A summary of the results of several model tuning optimization studies are shown in Table \ref{tab:optResult}. 
+A summary of the results of several model tuning optimization studies are shown in Table \ref{tab:optResult}. Each row of the table describes the parameters and the result of an optimization study.
 
 \begin{landscape}
 \begin{table}[H]
@@ -206,6 +208,15 @@ A summary of the results of several model tuning optimization studies are shown 
 		7 & 2 & 0 & 1 & yes & manually tuned & no &  &  &  \\
 		8 & 2 & 0 & 1e3 & yes & manually tuned & no &  &  &  \\
 		9 & 2 & 0 & 1e-3 & yes & manually tuned & no &  &  &  \\
+		10 & 5 & 0 & 1 & yes & manually tuned & yes &  &  &  \\
+		11 & 5 & 0 & 1e3 & yes & manually tuned & yes &  &  &  \\
+		12 & 5 & 0 & 1e-3 & yes & manually tuned & yes &  &  &  \\
+		13 & 2 & 4 & 1 & yes & manually tuned & yes &  &  &  \\
+		14 & 2 & 4 & 1e3 & yes & manually tuned & yes &  &  &  \\
+		15 & 2 & 4 & 1e-3 & yes & manually tuned & yes &  &  &  \\
+		13 & 5 & 4 & 1 & yes & manually tuned & yes &  &  &  \\
+		14 & 5 & 4 & 1e3 & yes & manually tuned & yes &  &  &  \\
+		15 & 5 & 4 & 1e-3 & yes & manually tuned & yes &  &  &  \\
 		\hline\hline
 	\end{tabular}
 \end{table}
