@@ -3,7 +3,7 @@
 
 The state-space model generated in Chapter \ref{ch:sysModeling} was adjusted such that its frequency response fit the experimental frequency response. This was done by adjusting certain parameters in the model that each represented some uncertainty in the model's physical characteristics. This adjustment was first done by hand, and then repeated in a automated process through optimization.
 
-For this chapter, unless otherwise indicated, the state-space model was generated using $N_s=2$ structural dynamic modes and $N_\text{lag}=0$ lag terms in the Roger Approximation. This was done in order to obtain a low-order model which still could accurately capture the dynamics at low frequencies, such as those in the bandwidth of the actuators.
+For this chapter, unless otherwise indicated, the state-space model was generated using $n_s=2$ structural dynamic modes and $n_\text{lag}=0$ lag terms in the Roger Approximation. This was done in order to obtain a low-order model which still could accurately capture the dynamics at low frequencies, such as those in the bandwidth of the actuators.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -41,7 +41,7 @@ A summary of tuning parameters and their default values (which apply no correcti
 		\hline\hline
 	\end{tabular}
 \end{table}
-Note that Table \ref{tab:tuningParams} applies for the case of $N_s=2$ structural dynamic modes used in modeling. When a higher number of modes is used, $\{\zeta\}$ continues to extend with damping ratios of higher modes from the GVT results (found in Table \ref{tab:expModalData}) and the Roger matrix scaling factors $[\tau_{P_{ssi}}]$ are a larger matrix of ones.
+Note that Table \ref{tab:tuningParams} applies for the case of $n_s=2$ structural dynamic modes used in modeling. When a higher number of modes is used, $\{\zeta\}$ continues to extend with damping ratios of higher modes from the GVT results (found in Table \ref{tab:expModalData}) and the Roger matrix scaling factors $[\tau_{P_{ssi}}]$ are a larger matrix of ones.
 
 \begin{landscape}
 
@@ -169,7 +169,7 @@ A summary of the results of several model tuning optimization studies are shown 
 	\caption{Model Tuning Optimization Results}
 	\begin{tabular}{cccccccccc}
 		\hline\hline
-		\# & $N_s$ & $N_\text{lag}$ & $\lambda$ & ignore accelerometers? & $\{x_0\}$ & bounds & $\epsilon_\text{mag}(\{x\})$ & $\epsilon_\text{phase}(\{x\})$ & $F(\{x\})$ \\
+		\# & $n_s$ & $n_\text{lag}$ & $\lambda$ & ignore accelerometers? & $\{x_0\}$ & bounds & $\epsilon_\text{mag}(\{x\})$ & $\epsilon_\text{phase}(\{x\})$ & $F(\{x\})$ \\
 		\hline
 		1 & 2 & 0 & 1 & yes & default value & yes &  &  &  \\
 		2 & 2 & 0 & 1e3 & yes & default value & yes &  &  &  \\
@@ -201,4 +201,3 @@ A summary of the results of several model tuning optimization studies are shown 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:shortcomings}
 
-<insert>
