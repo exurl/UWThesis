@@ -57,6 +57,7 @@ Note that Table \ref{tab:tuningParams} applies for the case of $n_s=2$ structura
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Manual Model Tuning} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:manualTuning}
 
 The first step in tuning the model was experimenting with manually tuning the parameters with the goal of closing the gap between the model's FRF and the experimental FRF at a single airspeed ($q_D=207$). This was done by thinking intuitively about the modeling uncertainties which are most likely effecting the known discrepancies in the FRFs. For example, it was known that linear aerodynamics would overpredict the control surface effectiveness by up to 50\% even in reasonably small ($<10^\circ$) deflections \cite{Young1947,Riebe1955}. Thus, the control effectiveness of the ailerons and elevator were lowered until the FRFs with these controls as inputs better matched the experimental FRFs in magnitude.
 
@@ -106,9 +107,9 @@ The next step in tuning of MARGE's state-space model was to tune using optimizat
 \end{enumerate}
 The first two computations were discussed in Chapter \ref{ch:sysModeling} and Section \ref{sec:wtDAQ}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Computing FRF Error} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+One additional difference between the automated tuning here and the manual tuning method presented in Section \ref{sec:manualTuning} is that the FRFs involving the accelerometers were ignored in this section. This was because the results from the accelerometers were unreliable in a way that was infeasible to correct for in an automated way.
+
+\subsubsection{Computing FRF Error} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The third computation, the scalar measure of difference between FRFs, is performed as follows:
 First, the ``error'' in the magnitudes of the FRFs $\epsilon_\text{mag}$ and the ``error'' in the phase of the FRFs $\epsilon_\text{phase}$ are computed and summed across several frequencies in Eq. \ref{eq:magCompare} and \ref{eq:phaseCompare} respectively. Each difference in magnitude is normalized by the experimental magnitude at that frequency. The differences in phase are not normalized since they are already non-dimensional (in radians).
@@ -216,3 +217,5 @@ bad hall effect sensor
 
 noise in accelerometers
 
+bad data in general (visible in certain FRFs in plots)
+-  john is fixing this in future with auto FRF generation and viewing
