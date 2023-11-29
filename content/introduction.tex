@@ -1,8 +1,6 @@
 \chapter{Introduction}
 \label{ch:introduction}
 
-This thesis describes of the modeling methods and experimental validation work performed to synthesize an aeroservoelastic model sufficient for use in control design.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\section{Motivation} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -19,11 +17,13 @@ This thesis describes of the modeling methods and experimental validation work p
 %
 %talk about aeroservoelasticity
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Problem Statement} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Unlike mathematical models from black-box system identification, ``grey-box'' physics-based models are capable of generalizing to conditions outside of those from which they were derived. Such a generalizable mathematical model is desirable for aeroservoelastic systems because it expands the validity of the model to flight conditions outside of those it was explicitly tested in, significantly reducing the cost of testing in order to cover all relevant flight conditions.
 
-This thesis demonstrates the synthesis of a physics-based state-space model of MARGE. Unlike models from black-box system identification, physics-based ``grey-box'' models are capable of generalizing to conditions outside of those from which they were derived.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Problem Statement} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This thesis describes of the modeling methods and experimental validation work performed to synthesize one such aeroservoelastic model. The model takes the form of a linear, time-invariant state-space model which is amenable for use in the design aeroservoelastic flight control laws.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\section{Prior Work} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -33,8 +33,8 @@ This thesis demonstrates the synthesis of a physics-based state-space model of M
 %
 %Talk about MARGE Quenzer 2019.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Organization} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Organization} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The remainer of this thesis is organized as follows: first, the test article used in this study is described in Chapter \ref{ch:sysDescription}. Then, the modeling methods used to generate the state-space model are formulated in Chapter \ref{ch:sysModeling}. The finite-element model and the GVT done to correct it are covered in Chapters \ref{ch:nastran} and \ref{ch:gvt}, respectively. The wind tunnel testing and model tuning performed based on it are covered in Chapters \ref{ch:windTunnel} and \ref{ch:tuning}, respectively. Finally, Chapter \ref{ch:conclusion} concludes with a discussion of the results and potential follow-on studies.

@@ -3,7 +3,7 @@
 %----------------------------------------------------------------
 %LIVNE PAPERS
 %----------------------------------------------------------------
-article{Livne2018,
+@article{Livne2018,
     author = {Livne, Eli},
     title = {Aircraft Active Flutter Suppression: State of the Art and Technology Maturation Needs},
     journal = {Journal of Aircraft},
@@ -16,7 +16,7 @@ article{Livne2018,
     eprint = {https://doi.org/10.2514/1.C034442}
 }
 
-article{Livne1999,
+@article{Livne1999,
     author = {Livne, Eli},
     title = {Integrated Aeroservoelastic Optimization: Status and Direction},
     journal = {Journal of Aircraft},
@@ -29,7 +29,7 @@ article{Livne1999,
     eprint = {https://doi.org/10.2514/2.2419}
 }
 
-article{Livne2003,
+@article{Livne2003,
     author = {Livne, Eli},
     title = {Future of Airplane Aeroelasticity},
     journal = {Journal of Aircraft},
@@ -41,7 +41,6 @@ article{Livne2003,
     URL = {https://doi.org/10.2514/2.7218},
     eprint = {https://doi.org/10.2514/2.7218}
 }
-
 
 %----------------------------------------------------------------
 %OTHER PAPERS
@@ -93,8 +92,8 @@ what bibtex field does this AGARD document ID go under?
 	edition   = {2}
 }
 
- H1, H2, Hv FRF
-inproceedings{Rocklin1985,
+% H1, H2, Hv FRF
+@inproceedings{Rocklin1985,
 	booktitle = {Proceedings of the Third International Modal Analysis Conference},
 	author = {G.T. Tocklin and J. Crowley and H. Vold},
 	title = {A Comparison of H1, H2, and Hv Frequency Response Functions},
@@ -117,14 +116,25 @@ inproceedings{Rocklin1985,
 
 % control surface effectiveness source 2
 @techreport{Riebe1955,
-  author      = {John M. Riebe},
-  title       = {A Correlation of Two-Dimensional Data on Lift Coefficient Available with Blowing-, Suction-, Slotted-, and Plain-Flap High-Lift Devices},
-  institution = {National Advisory Committee for Aeronautics},
-  year        = {1955},
-  type        = {Research Memorandum},
-  number      = {NACA-RM-L55D29a},
-  address     = {Langley Aeronautical Lab. Langley Field, VA, United States},
-  month       = {October}
+	author      = {John M. Riebe},
+	title       = {A Correlation of Two-Dimensional Data on Lift Coefficient Available with Blowing-, Suction-, Slotted-, and Plain-Flap High-Lift Devices},
+	institution = {National Advisory Committee for Aeronautics},
+	year        = {1955},
+	type        = {Research Memorandum},
+	number      = {NACA-RM-L55D29a},
+	address     = {Langley Aeronautical Lab. Langley Field, VA, United States},
+	month       = {October}
+}
+
+% Karpel Minimum State Lag Terms
+@inbook{Karpel1988,
+	author = {Mordechay Karpel},
+	title = {Design for Active Flutter Suppression and Gust Alleviation Using State-Space Aeroelastic Modeling},
+	booktitle = {21st Structures, Structural Dynamics, and Materials Conference},
+	year = {1988},
+	doi = {10.2514/6.1980-766},
+	URL = {https://arc.aiaa.org/doi/abs/10.2514/6.1980-766},
+	eprint = {https://arc.aiaa.org/doi/pdf/10.2514/6.1980-766}
 }
 
 ----------------------------------------------------------------
@@ -142,9 +152,8 @@ REFERENCE MATERIAL
 
 % 3x3 wind tunnel website
 @misc{3x3site,
-  title  = {\emph{3x3 Low-Speed Wind Tunnel}},
+  title  = {3x3 Low-Speed Wind Tunnel},
   author = {William E. Boeing Department of Aeronautics and Astronautics},
-  note   = {\url{https://www.aa.washington.edu/AERL/3x3}
-           [Accessed: 10/12/2023]},
+  note   = {https://www.aa.washington.edu/AERL/3x3},
   year   = {2023}
 }

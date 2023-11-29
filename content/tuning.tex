@@ -163,7 +163,6 @@ Note that all damping ratios are constrained to be positive. Also, all of the ae
 
 A summary of the model properties, tuned parameters, and objective function values of several model tuning optimization studies are shown in Table \ref{tab:optResult}. Each row of the table describes the parameters and the result of an optimization study. Select optimized tuning parameters corresponding to Table \ref{tab:optResult} can be found in Table \ref{tab:optVar}.
 
-Some 
 \begin{landscape}
 
 \begin{table}[H]
@@ -175,23 +174,23 @@ Some
 		\# & $n_s$ & $n_\text{lag}$ & $\lambda$ & $\{x_0\}$ & bounds & $\epsilon_\text{mag}(\{x\})$ & $\epsilon_\text{phase}(\{x\})$ & $F(\{x\})$ \\
 		\hline
 		1  & 2 & 0 & 1    & default value & yes & 328 & 447  & 775 \\
-		2  & 2 & 0 & 1e3  & default value & yes & 282 & 519  & 8947 \\
-		3  & 2 & 0 & 1e-3 & default value & yes & 355 & 438  & 1386 \\
+		2  & 2 & 0 & 1000  & default value & yes & 282 & 519  & 8947 \\
+		3  & 2 & 0 & 0.001 & default value & yes & 355 & 438  & 1386 \\
 		4  & 2 & 0 & 1    & manual tune   & yes & 324 & 451  & 775 \\
-		5  & 2 & 0 & 1e3  & manual tune   & yes & 282 & 519  & 8947 \\
-		6  & 2 & 0 & 1e-3 & manual tune   & yes & 358 & 416  & 1317 \\
+		5  & 2 & 0 & 1000  & manual tune   & yes & 282 & 519  & 8947 \\
+		6  & 2 & 0 & 0.001 & manual tune   & yes & 358 & 416  & 1317 \\
 		7  & 2 & 0 & 1    & manual tune   & no  & 200 & 443  & 644 \\
-		8  & 2 & 0 & 1e3  & manual tune   & no  & 100 & 1354 & 3209 \\
-		9  & 2 & 0 & 1e-3 & manual tune   & no  & 727 & 419  & 1326 \\
+		8  & 2 & 0 & 1000  & manual tune   & no  & 100 & 1354 & 3209 \\
+		9  & 2 & 0 & 0.001 & manual tune   & no  & 727 & 419  & 1326 \\
 		10 & 5 & 0 & 1    & manual tune   & no  & 164 & 417  & 581 \\
-		11 & 5 & 0 & 1e3  & manual tune   & no  & 124 & 1899 & 3986 \\
-		12 & 5 & 0 & 1e-3 & manual tune   & no  & 453 & 462  & 1463 \\
+		11 & 5 & 0 & 1000  & manual tune   & no  & 124 & 1899 & 3986 \\
+		12 & 5 & 0 & 0.001 & manual tune   & no  & 453 & 462  & 1463 \\
 		13 & 2 & 2 & 1    & manual tune   & no  & 144 & 414  & 559 \\
-		14 & 2 & 2 & 1e3  & manual tune   & no  & 104 & 1622 & 3332 \\
-		15 & 2 & 2 & 1e-3 & manual tune   & no  & 230 & 371  & 1173 \\
+		14 & 2 & 2 & 1000  & manual tune   & no  & 104 & 1622 & 3332 \\
+		15 & 2 & 2 & 0.001 & manual tune   & no  & 230 & 371  & 1173 \\
 		16 & 5 & 2 & 1    & manual tune   & no  & 227 & 486  & 713 \\
-		17 & 5 & 2 & 1e3  & manual tune   & no  & 176 & 912  & 5607 \\
-		18 & 5 & 2 & 1e-3 & manual tune   & no  & 347 & 408  & 1292 \\
+		17 & 5 & 2 & 1000  & manual tune   & no  & 176 & 912  & 5607 \\
+		18 & 5 & 2 & 0.001 & manual tune   & no  & 347 & 408  & 1292 \\
 		\hline\hline
 	\end{tabular}
 \end{table}
@@ -216,6 +215,18 @@ Some
 \end{table}
 
 \end{landscape}
+
+In general, as the model increases in size and constraints are loosened, the model optimization is capable of achieving a better result. One notable exception is the difference between the 13th and 16th optimization run. In Table \ref{tab:optResult}, it can be seen that the increase from $n_s=2$ to $n_s=5$. Although the 16th run encodes more detailed dynamics with its five mode shapes, the inaccuracy of the mode shapes of the higher-frequency modes may have decreased this model's accuracy.
+
+Optimization runs 3 and 6 differ only in their initial conditions. However, the runs reach different solutions, with one achieving a lower objective function than the other. This indicates that the objective function may have local minima which prevent the gradient-based optimization algorithm from reaching the true optimal solution.
+
+Note that the optimized objective function values $F(\{x\})$ from Table \ref{tab:optResult} cannot be compared between runs with different weights $\lambda$ (as their objective functions are different). However, the optimized magnitude and phase components $\epsilon_\text{mag}(\{x\})$ and $\epsilon_\text{phase}(\{x\})$ of the objective can be compared. In some cases, runs which only differ in $\lambda$ differ greatly in these optimized components. This indicates that there can be a significant trade-off between achieving a good fit in the magnitude response and a good fit in the phase response.
+
+As for the optimized parameters in \ref{tab:optVar}, it can be seen that as soon as the physics-based bounds are removed (beginning in optimization run 7), the optimal tuning parameters immediately begin to take non-physical values. For example, the 10th optimization run resulted in a negative natural frequency $\omega_{n,2}$.
+
+Notably, the 13th optimization run achieved the best result while also maintaining nearly all physically feasible tuning parameters. The only non-physical tuning outcome in this run is the first mode (rigid pitching) damping ratio. This, however, is not unexpected since the damping mechanisms present in reality are not perfectly captured by the linear viscous damping model utilized here. Otherwise, this is a physically realistic model which has been tuned to emulate the experimental data much more accurately than both the untuned model and the manually tuned model.
+
+Thus, this model achieves the stated objective of this study: to obtain a accurate, physics-based mathematical model for MARGE. The state-space matrices for this model can be found in Appendix \ref{ap:optSS}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\section{Hardware Limitations} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
