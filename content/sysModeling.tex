@@ -123,14 +123,14 @@ Note that since the control modes are rigid-body modes, they have no stiffness a
 \subsection{The Roger Approximation} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % The aerodynamic influence matrices $[A]$ and $[A_G]$ are nonlinear functions of frequency. In order to obtain a linear state-space system, these must be approximated as analytic functions of $s$.
-The aerodynamic influence matrix $[A]$ is a function of the Laplace variable $s$. For a thin airfoil oscillating in a potential flow, Theodorsen's solution applies \cite{Theodorsen1949}. This solution is nonlinear and unable to be represented in a linear system. In order to obtain the linear state-space system, $[A]$ must be approximated as an analytic function of $s$.
+The aerodynamic influence matrix $[A]$ is a function of the Laplace variable $s$. For a thin airfoil oscillating in a potential flow, Theodorsen's analytical solution applies \cite{Theodorsen1949}. In the more general case of an aircraft's wing in three dimensions, a numerical solver using doublet-lattice theory can compute $[A]$. This solution is nonlinear and unable to be represented in a linear system. In order to obtain the linear state-space system, $[A]$ must be approximated as an analytic function of $s$.
 
 The Roger approximation \cite{Roger1977} is a method of generating a rational function approximation of the aerodynamic influence matrix in the form
 \begin{align}
 	\label{eq:RogerApprox}
     [A(s)] \approx [P_0] + s [P_1] + s^2 [P_2] + \sum_{n=1}^{N_\text{lag}} \frac{s}{s+\beta_n} [P_{n+2}]
 \end{align}
-where $[P]$ are the unknown real-valued matrices that are fit to tabulated known $[A(s)]$ matrices (obtained from an unsteady aerodynamic solver such as that found in NASTRAN). Aside from the zeroth, first, and second order terms, there are $N_\text{lag}$ additional ``lag term'' approximating functions which are defined by their respective constants $\beta$.
+where $[P]$ are the unknown real-valued matrices that are fit to tabulated known $[A(s)]$ matrices (obtained from an unsteady aerodynamic solver such as that found in NASTRAN). Aside from the zeroth, first, and second order terms, there are $N_\text{lag}$ additional ``lag term'' approximating functions which are defined by their respective constants $\beta$. These constants $\beta$ are chosen by the user.
 
 Begin with an approximation only along the frequency domain:
 \begin{align}
