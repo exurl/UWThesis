@@ -76,7 +76,7 @@ The resultant parameters and FRF comparison of the manually tuned model are show
 		$\tau_\text{ail1}$ & 1 & 0.6 \\
 		$\tau_\text{ail2}$ & 1 & 0.7 \\
 		$\tau_\text{elev}$ & 1 & 0.6 \\
-		$\tau_\text{gust}$ & 1 & N/A \\
+		$\tau_\text{gust}$ & 1 & 1 \\
 		$\left[\tau_{P_{ss1}}\right]$ & $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$ & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
 		$\left[\tau_{P_{ss2}}\right]$ & $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$ & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
 		$\left[\tau_{P_{ss3}}\right]$ & $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$ & $\begin{bmatrix} 0.9 & 1 \\ 0.5 & 1.5 \end{bmatrix}$ \\
@@ -109,7 +109,7 @@ The first two computations were discussed in Chapter \ref{ch:sysModeling} and Se
 
 One additional difference between the automated tuning here and the manual tuning method presented in Section \ref{sec:manualTuning} is that the FRFs involving the accelerometers were ignored in this section. This was because the results from the accelerometers were unreliable in a way that was infeasible to correct for in an automated way.
 
-\subsubsection{Computing FRF Error} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Computing FRF Error} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The third computation, the scalar measure of difference between FRFs, is performed as follows:
 First, the ``error'' in the magnitudes of the FRFs $\epsilon_\text{mag}$ and the ``error'' in the phase of the FRFs $\epsilon_\text{phase}$ are computed and summed across several frequencies in Eq. \ref{eq:magCompare} and \ref{eq:phaseCompare} respectively. Each difference in magnitude is normalized by the experimental magnitude at that frequency. The differences in phase are not normalized since they are already non-dimensional (in radians).
@@ -159,63 +159,91 @@ Note that all damping ratios are constrained to be positive. Also, all of the ae
 	\end{tabular}
 \end{table}
 
-\subsection{Optimization Results}
+\subsection{Optimization Results} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-A summary of the results of several model tuning optimization studies are shown in Table \ref{tab:optResult}. Each row of the table describes the parameters and the result of an optimization study.
+A summary of the model properties, tuned parameters, and objective function values of several model tuning optimization studies are shown in Table \ref{tab:optResult}. Each row of the table describes the parameters and the result of an optimization study. The corresponding optimized tuning parameters can be found in Table \ref{tab:optVar}.
 
-\begin{landscape}
 \begin{table}[H]
 	\centering
 	\label{tab:optResult}
 	\caption{Model Tuning Optimization Results}
 	\begin{tabular}{cccccccccc}
 		\hline\hline
-		\# & $n_s$ & $n_\text{lag}$ & $\lambda$ & ignore accelerometers? & $\{x_0\}$ & bounds & $\epsilon_\text{mag}(\{x\})$ & $\epsilon_\text{phase}(\{x\})$ & $F(\{x\})$ \\
+		\# & $n_s$ & $n_\text{lag}$ & $\lambda$ & $\{x_0\}$ & bounds & $\epsilon_\text{mag}(\{x\})$ & $\epsilon_\text{phase}(\{x\})$ & $F(\{x\})$ \\
 		\hline
-		1 & 2 & 0 & 1 & yes & default value & yes & 328 & 447 & 775 \\
-		2 & 2 & 0 & 1e3 & yes & default value & yes & 282 & 519 & 8947 \\
-		3 & 2 & 0 & 1e-3 & yes & default value & yes & 355 & 438 & 1386 \\
-		4 & 2 & 0 & 1 & yes & manually tuned & yes & 324 & 451 & 775 \\
-		5 & 2 & 0 & 1e3 & yes & manually tuned & yes & 282 & 519 & 8947 \\
-		6 & 2 & 0 & 1e-3 & yes & manually tuned & yes & 358 & 416 & 1317 \\
-		7 & 2 & 0 & 1 & yes & manually tuned & no & 200 & 443 & 644 \\
-		8 & 2 & 0 & 1e3 & yes & manually tuned & no & 100 & 1354 & 3209 \\
-		9 & 2 & 0 & 1e-3 & yes & manually tuned & no & 727 & 419 & 1326 \\
-		10 & 5 & 0 & 1 & yes & manually tuned & no & 164 & 417 & 581 \\
-		11 & 5 & 0 & 1e3 & yes & manually tuned & no & 124 & 1899 & 3986 \\
-		12 & 5 & 0 & 1e-3 & yes & manually tuned & no & 453 & 462 & 1463 \\
-		13 & 2 & 2 & 1 & yes & manually tuned & no & 144 & 414 & 559 \\
-		14 & 2 & 2 & 1e3 & yes & manually tuned & no & 104 & 1622 & 3332 \\
-		15 & 2 & 2 & 1e-3 & yes & manually tuned & no & 230 & 371 & 1173 \\
-		13 & 5 & 2 & 1 & yes & manually tuned & no & 227 & 486 & 713 \\
-		14 & 5 & 2 & 1e3 & yes & manually tuned & no & 176 & 912 & 5607 \\
-		15 & 5 & 2 & 1e-3 & yes & manually tuned & no & 347 & 408 & 1292 \\
+		1  & 2 & 0 & 1    & default value & yes & 328 & 447  & 775 \\
+		2  & 2 & 0 & 1e3  & default value & yes & 282 & 519  & 8947 \\
+		3  & 2 & 0 & 1e-3 & default value & yes & 355 & 438  & 1386 \\
+		4  & 2 & 0 & 1    & manual tune   & yes & 324 & 451  & 775 \\
+		5  & 2 & 0 & 1e3  & manual tune   & yes & 282 & 519  & 8947 \\
+		6  & 2 & 0 & 1e-3 & manual tune   & yes & 358 & 416  & 1317 \\
+		7  & 2 & 0 & 1    & manual tune   & no  & 200 & 443  & 644 \\
+		8  & 2 & 0 & 1e3  & manual tune   & no  & 100 & 1354 & 3209 \\
+		9  & 2 & 0 & 1e-3 & manual tune   & no  & 727 & 419  & 1326 \\
+		10 & 5 & 0 & 1    & manual tune   & no  & 164 & 417  & 581 \\
+		11 & 5 & 0 & 1e3  & manual tune   & no  & 124 & 1899 & 3986 \\
+		12 & 5 & 0 & 1e-3 & manual tune   & no  & 453 & 462  & 1463 \\
+		13 & 2 & 2 & 1    & manual tune   & no  & 144 & 414  & 559 \\
+		14 & 2 & 2 & 1e3  & manual tune   & no  & 104 & 1622 & 3332 \\
+		15 & 2 & 2 & 1e-3 & manual tune   & no  & 230 & 371  & 1173 \\
+		13 & 5 & 2 & 1    & manual tune   & no  & 227 & 486  & 713 \\
+		14 & 5 & 2 & 1e3  & manual tune   & no  & 176 & 912  & 5607 \\
+		15 & 5 & 2 & 1e-3 & manual tune   & no  & 347 & 408  & 1292 \\
 		\hline\hline
 	\end{tabular}
 \end{table}
-\end{landscape}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Hardware Limitations} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\label{sec:shortcomings}
+%\begin{table}[H]
+%	\centering
+%	\label{tab:optVars}
+%	\caption{Model Tuning Optimized Parameters}
+%	\begin{tabular}{}
+%		\hline\hline
+%		\# & $\omega_{n,2}$ & $\zeta_1$ & $\zeta_2$ & $\tau_\text{ail1}$ & $\tau_\text{ail2}$ & $\tau_\text{elev}$ & $\tau_\text{gust}$ &
+%		$\left[\tau_{P_{ss1}}\right]$ & $\left[\tau_{P_{ss2}}\right]$ & $\left[\tau_{P_{ss3}}\right]$ \\
+%		\hline
+%		1  & 
+%		2  & 
+%		3  & 
+%		4  & 
+%		5  & 
+%		6  & 
+%		7  & 
+%		8  & 
+%		9  & 
+%		10 & 
+%		11 & 
+%		12 & 
+%		13 & 
+%		14 & 
+%		15 & 
+%		13 & 
+%		14 & 
+%		15 & 
+%		\hline\hline
+%	\end{tabular}
+%\end{table}
 
-
-\subsection{Ground Vibration Testing}
-no mode shape measurement
-
-plastic model interferes with GVT
-
-GVT accelerometer issues
-
-structural damping not well-modeled
-
-\subsection{Wind Tunnel Testing}
-pitch damping in root
-
-bad hall effect sensor
-
-noise in accelerometers
-
-bad data in general (visible in certain FRFs in plots)
--  john is fixing this in future with auto FRF generation and viewing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Hardware Limitations} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\label{sec:shortcomings}
+%
+%\subsection{Ground Vibration Testing}
+%no mode shape measurement
+%
+%plastic model interferes with GVT
+%
+%GVT accelerometer issues
+%
+%structural damping not well-modeled
+%
+%\subsection{Wind Tunnel Testing}
+%pitch damping in root
+%
+%bad hall effect sensor
+%
+%noise in accelerometers
+%
+%bad data in general (visible in certain FRFs in plots)
+%-  john is fixing this in future with auto FRF generation and viewing

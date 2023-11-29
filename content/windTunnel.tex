@@ -26,7 +26,8 @@ This single concatenated time-domain signal was then buffered into overlapping H
 
 \subsection{Accelerometer Data Postprocessing} %%%%%%%%%%%%%%%%%
 
-The output of the accelerometers contained significant noise and potentially contained electrical interference from other components in MARGE. Thus, the uncertainty in FRFs between inputs and the accelerometers was high. This was compensated for by specifically filtering the time-series signal from accelerometers before other postprocessing and limiting the bandwidth of the FRFs produced to within a range in which the accelerometers tend to behave more consistently. The shortcomings in the hardware of MARGE, including the accelerometers, will be discussed further in Section \ref{sec:shortcomings}.
+The output of the accelerometers contained significant noise and potentially contained electrical interference from other components in MARGE. Thus, the uncertainty in FRFs between inputs and the accelerometers was high. This was compensated for by specifically filtering the time-series signal from accelerometers before other postprocessing and limiting the bandwidth of the FRFs produced to within a range in which the accelerometers tend to behave more consistently.
+%The shortcomings in the hardware of MARGE, including the accelerometers, will be discussed further in Section \ref{sec:shortcomings}.
 
 Before going through the postprocessing steps outlined above, the time-series signal from the accelerometers was filtered using a Butterworth bandpass filter which limited frequencies in the signal to between 0.8 Hz and 25 Hz. This was done to reduce the effect of both high-frequency noise and low-frequency drift in the acclerometer signals. This same bandpass filter was applied to the input signal when generating FRFs between an input and the accelerometers so that the filter would not skew the FRF.
 
