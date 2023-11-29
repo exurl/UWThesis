@@ -551,9 +551,9 @@ The servo-actuated control surfaces on the wing and tail are known (from \cite{Q
 This transfer function has the response shown in Figure \ref{fig:servoInputDynamics}.
 \begin{figure}[H]
 	\centering
-	\label{fig:servoInputDynamics}
 	\includegraphics[width=4in]{servoInputDynamics.png}
 	\caption{Bode plot of actuator transfer function}
+	\label{fig:servoInputDynamics}
 \end{figure}
 This transfer function was then converted to the following equivalent state-space representation:
 \begin{equation}
@@ -576,8 +576,8 @@ The Pad\'e approximant matches the pure delay's response well in the frequency r
 \begin{figure}[H]
     \centering
     \includegraphics[width=4in]{gustInputDynamics.png}
-    \label{fig:padeApprox}
     \caption{Pad\'e approximant of the pure-delay response of the wind tunnel gust vanes}
+    \label{fig:padeApprox}
 \end{figure}
 This transfer function was then converted to the following equivalent state-space representation:
 \begin{equation}
@@ -632,8 +632,8 @@ The imperfect actuators and sensors can be accounted for in modeling by combinin
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{ASEblockDiagram.png}
-    \label{fig:actPlantSens}
     \caption{Integrated model of actuation, plant, and sensing in a control loop}
+    \label{fig:actPlantSens}
 \end{figure}
 In the system illustration in Fig. \ref{fig:actPlantSens}, the actuators take in the control command and output control forces; the plant takes in control forces and outputs motions; the sensors take in motions and output measured motions; and a control law can then use this measured motion to create a control command for MARGE.
 

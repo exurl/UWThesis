@@ -1,14 +1,13 @@
 \chapter{Finite Element Modeling}
 \label{ch:nastran}
 
-An aeroelastic finite element model (FEM) of MARGE was previously constructed using NASTRAN. The model includes MARGE, the wind tunnel test section walls, and the gust vanes.
-
-% The structural model was constructed from classical beam elements and point masses. The 
+An existing finite element model (FEM) of MARGE was updated in this study using NASTRAN. The model included MARGE, the wind tunnel test section walls, and the gust vanes. This chapter describes the FEM; the updates applied to it are documented in Chapter \ref{ch:gvt}.
 
 The wing structure and tail structure were each modeled as a single chain of Euler-Bernoulli beam elements along their respective spar. The wind tunnel walls were modeled as extremely rigid panels whose contribution to the structural dynamics of the FEM is negligible. The area moments of inertia and material properties of the beam elements in the finite element model are reported in Table \ref{tab:beamInertia}.
 \begin{table}[H]
     \centering
     \caption{Properties of Beam Finite Elements}
+    \label{tab:beamInertia}
     \begin{tabular}{lccccc}
         \hline\hline
                   & $E$, GPa & $G$, GPa & $I_1$, mm$^4$ & $I_2$, mm$^4$ & $J$, mm$^4$ \\
@@ -19,7 +18,6 @@ The wing structure and tail structure were each modeled as a single chain of Eul
         rigid     & $10^4$   & $10^4$   & $25.41$       & $58530$       & $58560$     \\
         \hline\hline
     \end{tabular}
-    \label{tab:beamInertia}
 \end{table}
 Note that the values in Table \ref{tab:beamInertia} (and also Table \ref{tab:nastranResult}) are the final values after corrections. The values before corrections and correction process are discussed in the following chapter.
 
@@ -28,8 +26,8 @@ The aerodynamic loads on the NASTRAN model are based on the doublet-lattice mode
 The structural dynamic solution to the FEM includes natural frequencies and mode shapes. These are summarized in Table \ref{tab:nastranResult}.
 \begin{table}[H]
 	\centering
-	\label{tab:nastranResult}
 	\caption{NASTRAN Modal Properties}
+	\label{tab:nastranResult}
 	\begin{tabular}{cll}
 		\hline\hline
 		\# & $\omega_n$ & Description \\
@@ -59,15 +57,15 @@ The structural dynamic solution to the FEM includes natural frequencies and mode
 
 \begin{figure}[h]
 	\centering
-	\label{fig:nastranWindowFull}
 	\includegraphics[width=9in]{margeFEMfull.png}
 	\caption{NASTRAN finite-element model of MARGE, gust vanes, and wind tunnel walls}
+	\label{fig:nastranWindowFull}
 \end{figure}
 \begin{figure}[h]
 	\centering
-	\label{fig:nastranWindowClose}
 	\includegraphics[width=9in]{margeFEMclose.png}
 	\caption{NASTRAN finite-element model, close-up of MARGE only}
+	\label{fig:nastranWindowClose}
 \end{figure}
 
 \end{landscape}

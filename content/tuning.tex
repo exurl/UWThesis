@@ -23,8 +23,8 @@ The final tuning parameters are scaling factors $\tau_{P_{ss}}$ for each entry o
 A summary of tuning parameters and their default values (which apply no correction) is shown in Table \ref{tab:tuningParams}. The comparison of this initial un-tuned model's FRFs and the experimental FRFs can be seen in Fig. \ref{fig:noTuneFRF}.
 \begin{table}[h]
 	\centering
-	\label{tab:tuningParams}
 	\caption{Default Values of MARGE Tuning Parameters}
+	\label{tab:tuningParams}
 	\begin{tabular}{ccc}
 		\hline\hline
 		Name & Default Value & Description \\
@@ -47,9 +47,9 @@ Note that Table \ref{tab:tuningParams} applies for the case of $n_s=2$ structura
 
 \begin{figure}[H]
 	\centering
-	\label{fig:noTuneFRF}
 	\includegraphics[width=9in]{figs/FRFcompare_noTune_q207.png}
 	\caption{A comparison of experimental FRFs and untuned model FRFs at $q=207$ Pa. The grey region is enclosed by the experimental $H_1$ FRF below and the experimental $H_2$ FRF above.}
+	\label{fig:noTuneFRF}
 \end{figure}
 
 \end{landscape}
@@ -64,8 +64,8 @@ The first step in tuning the model was experimenting with manually tuning the pa
 The resultant parameters and FRF comparison of the manually tuned model are shown below in Table \ref{tab:manualTuning} and Fig. \ref{fig:manualTunedFRF}. The poor alignment between the model and experiment in Fig \ref{fig:manualTunedFRF} indicates that the simple and ``intuitive'' manual tuning is not sufficient to completely match the experiment.
 \begin{table}[h]
 	\centering
-	\label{tab:manualTuning}
 	\caption{Manually Tuned Values of MARGE Tuning Parameters}
+	\label{tab:manualTuning}
 	\begin{tabular}{ccc}
 		\hline\hline
 		Name & Default Value & Adjusted Value \\
@@ -88,9 +88,9 @@ The resultant parameters and FRF comparison of the manually tuned model are show
 
 \begin{figure}[H]
 	\centering
-	\label{fig:manualTunedFRF}
 	\includegraphics[width=9in]{figs/FRFcompare_manualTune_q207.png}
 	\caption{A comparison of experimental FRFs and manually-tuned model FRFs. The grey region is enclosed by the experimental $H_1$ FRF below and the experimental $H_2$ FRF above.}
+	\label{fig:manualTunedFRF}
 \end{figure}
 
 \end{landscape}
@@ -139,8 +139,8 @@ Note that all damping ratios are constrained to be positive. Also, all of the ae
 
 \begin{table}[h]
 	\centering
-	\label{tab:optBounds}
 	\caption{Bounds of MARGE Tuning Parameter Design Variables}
+	\label{tab:optBounds}
 	\begin{tabular}{ccc}
 		\hline\hline
 		Name & Lower Bound & Upper Bound \\
