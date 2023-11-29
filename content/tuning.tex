@@ -161,12 +161,15 @@ Note that all damping ratios are constrained to be positive. Also, all of the ae
 
 \subsection{Optimization Results} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-A summary of the model properties, tuned parameters, and objective function values of several model tuning optimization studies are shown in Table \ref{tab:optResult}. Each row of the table describes the parameters and the result of an optimization study. The corresponding optimized tuning parameters can be found in Table \ref{tab:optVar}.
+A summary of the model properties, tuned parameters, and objective function values of several model tuning optimization studies are shown in Table \ref{tab:optResult}. Each row of the table describes the parameters and the result of an optimization study. Select optimized tuning parameters corresponding to Table \ref{tab:optResult} can be found in Table \ref{tab:optVar}.
+
+Some 
+\begin{landscape}
 
 \begin{table}[H]
 	\centering
-	\label{tab:optResult}
 	\caption{Model Tuning Optimization Results}
+	\label{tab:optResult}
 	\begin{tabular}{cccccccccc}
 		\hline\hline
 		\# & $n_s$ & $n_\text{lag}$ & $\lambda$ & $\{x_0\}$ & bounds & $\epsilon_\text{mag}(\{x\})$ & $\epsilon_\text{phase}(\{x\})$ & $F(\{x\})$ \\
@@ -186,43 +189,33 @@ A summary of the model properties, tuned parameters, and objective function valu
 		13 & 2 & 2 & 1    & manual tune   & no  & 144 & 414  & 559 \\
 		14 & 2 & 2 & 1e3  & manual tune   & no  & 104 & 1622 & 3332 \\
 		15 & 2 & 2 & 1e-3 & manual tune   & no  & 230 & 371  & 1173 \\
-		13 & 5 & 2 & 1    & manual tune   & no  & 227 & 486  & 713 \\
-		14 & 5 & 2 & 1e3  & manual tune   & no  & 176 & 912  & 5607 \\
-		15 & 5 & 2 & 1e-3 & manual tune   & no  & 347 & 408  & 1292 \\
+		16 & 5 & 2 & 1    & manual tune   & no  & 227 & 486  & 713 \\
+		17 & 5 & 2 & 1e3  & manual tune   & no  & 176 & 912  & 5607 \\
+		18 & 5 & 2 & 1e-3 & manual tune   & no  & 347 & 408  & 1292 \\
 		\hline\hline
 	\end{tabular}
 \end{table}
 
-%\begin{table}[H]
-%	\centering
-%	\label{tab:optVars}
-%	\caption{Model Tuning Optimized Parameters}
-%	\begin{tabular}{}
-%		\hline\hline
-%		\# & $\omega_{n,2}$ & $\zeta_1$ & $\zeta_2$ & $\tau_\text{ail1}$ & $\tau_\text{ail2}$ & $\tau_\text{elev}$ & $\tau_\text{gust}$ &
-%		$\left[\tau_{P_{ss1}}\right]$ & $\left[\tau_{P_{ss2}}\right]$ & $\left[\tau_{P_{ss3}}\right]$ \\
-%		\hline
-%		1  & 
-%		2  & 
-%		3  & 
-%		4  & 
-%		5  & 
-%		6  & 
-%		7  & 
-%		8  & 
-%		9  & 
-%		10 & 
-%		11 & 
-%		12 & 
-%		13 & 
-%		14 & 
-%		15 & 
-%		13 & 
-%		14 & 
-%		15 & 
-%		\hline\hline
-%	\end{tabular}
-%\end{table}
+\begin{table}[H]
+	\centering
+	\caption{Select Model Tuning Optimized Parameters}
+	\label{tab:optVar}
+	\begin{tabular}{ccccccccccc}
+		\hline\hline
+		\# & $\omega_{n,2}$ & $\zeta_1$ & $\zeta_2$ & $\tau_\text{ail1}$ & $\tau_\text{ail2}$ & $\tau_\text{elev}$ & $\tau_\text{gust}$ &
+		$\left[\tau_{P_{ss1}}\right]$ & $\left[\tau_{P_{ss2}}\right]$ & $\left[\tau_{P_{ss3}}\right]$ \\
+		\hline
+		1  & 1.58 & 5.96 & 0.0147 & 1.00 & 0.937 & 0.51 & 1.00 & $\begin{bmatrix}1.19 & 93.9 \\ 2.56 & 0.132\end{bmatrix}$ & $\begin{bmatrix}2.73 & 6.11 \\ 0.594 & 1.93\end{bmatrix}$ & $\begin{bmatrix}0.0223 & 19.6 \\ 15.2 & 22.1 \end{bmatrix}$ \\
+		4  & 1.46 & 60.0 & 0.028 & 0.497 & 0.452 & 0.547 & 0.652 & $\begin{bmatrix}1.01 & 1.00 \\ 0.00277 & 1.50\end{bmatrix}$ & $\begin{bmatrix}1.40 & 1.02 \\ 1.58 & 2.75\end{bmatrix}$ & $\begin{bmatrix}0.914 & 1.00 \\ 0.505 & 1.51\end{bmatrix}$ \\
+		7  & 3.19 & 14.6 & -0.0421 & 0.967 & 0.908 & 0.668 & 5.24 & $\begin{bmatrix}1.05 & -145 \\ 2.71 & 17.4\end{bmatrix}$ & $\begin{bmatrix}2.7 & 0.0893 \\ -0.0271 & 5.21\end{bmatrix}$ & $\begin{bmatrix}63.1 & -199 \\ -8.38 & 48.6\end{bmatrix}$ \\
+		10 & -2.12 & 60.2 & 4.64 & -3.37 & -6.23 & -6.30 & 0.447 & $\begin{bmatrix}0.410 & 6.71 \\ -0.351 & 1.22\end{bmatrix}$ & $\begin{bmatrix}2.36 & -4.30 \\ -14.6 & 5.26\end{bmatrix}$ & $\begin{bmatrix}1.11 & 0.968 \\ 1.63 & 1.03\end{bmatrix}$ \\
+		13 & 2.51 & 34.2 & 0.103 & 0.922 & 0.895 & 0.592 & 4.96 & $\begin{bmatrix}0.985 & -100.69 \\ 2.68 & 5.71\end{bmatrix}$ & $\begin{bmatrix}1.85 & 19.9 \\ 10.5 & 2.00\end{bmatrix}$ & $\begin{bmatrix}37.2 & -95.8 \\ -6.32 & 46.3\end{bmatrix}$ \\
+		16 & 3.49 & 60.2 & 8.27 & -7.63 & -2.68 & -8.63 & 0.681 & $\begin{bmatrix}0.937 & 9.33 \\ 0.784 & 0.688\end{bmatrix}$ & $\begin{bmatrix}3.87 & 4.34 \\ -5.30 & -1.59\end{bmatrix}$ & $\begin{bmatrix}1.02 & 0.988 \\ 1.52 & 1.02\end{bmatrix}$ \\
+		\hline\hline
+	\end{tabular}
+\end{table}
+
+\end{landscape}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\section{Hardware Limitations} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
