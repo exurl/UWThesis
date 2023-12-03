@@ -151,30 +151,31 @@ The median of all of these damping ratios, each from a different FRF, was then t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Finite Element Model Correction} %%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:femCorrection}
 
-The finite-element model was adjusted to better match the experimental GVT data as well as static testing data from a separate study. This was done by adjusting the bending and torsional stiffness of the various materials until the natural frequencies best matched that of the experiment. The uncorrected and corrected natural frequencies of the FEM are compared to the experimental natural frequencies in Table \ref{tab:gvtCompare}. Note that damping ratios are not involved here, as the FEM does not model damping. The damping ratios are used only in the modeling in Chapter \ref{ch:sysModeling}.
+The finite-element model was adjusted to better match the experimental GVT data as well as static testing data from a separate study. This was done by adjusting the bending and torsional stiffness of the various materials until the natural frequencies best matched that of the experiment; the values of these before and after correction are shown in Table \ref{tab:gvtAdjust}. The uncorrected and corrected natural frequencies of the FEM are compared to the experimental natural frequencies in Fig. \ref{fig:gvtAdjust}. Note that damping ratios are not involved here, as the FEM does not model damping. The damping ratios are used only in the modeling in Chapter \ref{ch:sysModeling}.
 
 \begin{table}[h]
     \centering
-    \caption{Experimental Natural Modes}
-    \label{tab:expModalData}
-    \begin{tabular}{ccl}
+    \caption{Finite-Element Model Material Parameter Adjustment}
+    \label{tab:gvtAdjust}
+    \begin{tabular}{ccccc}
         \hline\hline
-        $\omega_n$ & $\zeta$ & Description \\
-        \hline
-        0      &       & pitching \\
-        1.422  & 0.030 & wing bending 1 \\
-        10.142 & 0.046 & wing bending 2 \\
-        18.094 & 0.113 & wing twisting 1 \\
-        19.893 & 0.033 & fuselate in-plane bending 1 \\
-        19.897 & 0.031 & fuselage bending 1 \\
-        32.545 & 0.019 & wing bending 3 \\
-        51.706 & 0.084 & wing torsion 2 \\
-        60.482 & 0.035 & wing bending 4 \\
-        74.521 & 0.023 & fuselage bending 2 \\
+		component & old $E$ (Pa) & old $G$ (Pa) & new $E$ (Pa) & new $G$ (Pa) \\
+		\hline
+		fuselage  & $2.00\times10^{11}$ & $7.58\times10^{10}$ & $1.80\times10^{11}$ & $7.60\times10^{10}$ \\ 
+		wing spar & $6.89\times10^{10}$ & $2.59\times10^{10}$ & $6.89\times10^{10}$ & $1.25\times10^7$ \\
+		tail spar & $6.89\times10^{10}$ & $2.59\times10^{10}$ & $6.89\times10^{10}$ & $2.59\times10^7$ \\
         \hline\hline
     \end{tabular}
 \end{table}
+
+\begin{figure}
+    \centering
+    \label{fig:gvtAdjust}
+    \includegraphics[width=5in]{figs/FEMcorrection.png}
+    \caption{Finite-element model material parameter adjustment}
+\end{figure}
 
 \begin{table}[h]
 	\centering
@@ -182,7 +183,7 @@ The finite-element model was adjusted to better match the experimental GVT data 
 	\label{tab:gvtCompare}
 	\begin{tabular}{cccl}
 		\hline\hline
-		Uncorrected FEM & Corrected FEM & Experiment & Description \\
+		Uncorrected FEM (Hz) & Corrected FEM (Hz) & Experiment (Hz) & Description \\
 		\hline
         0 & 0 &  & pitching \\
 		1.454401 & 1.44397 & 1.422 & wing bending 1 \\

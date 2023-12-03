@@ -20,7 +20,7 @@ The next tuning parameters are the effectiveness $\tau$ of the controls. Each co
 
 The final tuning parameters are scaling factors $\tau_{P_{ss}}$ for each entry of $[P_{ss}]$. (Refer to Eq. \ref{eq:EOMwRoger} for the context in which $[P_{ss}]$ is used in modeling.) These scale the lift of the lifting surfaces (not including the control surfaces) to account for airfoil thickness, viscous effects, roughness, and gaps in construction.
 
-A summary of tuning parameters and their default values (which apply no correction) is shown in Table \ref{tab:tuningParams}. The comparison of this initial un-tuned model's FRFs and the experimental FRFs can be seen in Fig. \ref{fig:noTuneFRF}.
+A summary of tuning parameters and their default values (corresponding to no corrections) is shown in Table \ref{tab:tuningParams}. The comparison of this initial un-tuned model's FRFs and the experimental FRFs can be seen in Fig. \ref{fig:noTuneFRF}.
 \begin{table}[h]
 	\centering
 	\caption{Default Values of MARGE Tuning Parameters}
@@ -41,6 +41,7 @@ A summary of tuning parameters and their default values (which apply no correcti
 		\hline\hline
 	\end{tabular}
 \end{table}
+
 Note that Table \ref{tab:tuningParams} applies for the case of $n_s=2$ structural dynamic modes used in modeling. When a higher number of modes is used, $\{\zeta\}$ continues to extend with damping ratios of higher modes from the GVT results (found in Table \ref{tab:expModalData}) and the Roger matrix scaling factors $[\tau_{P_{ssi}}]$ are a larger matrix of ones.
 
 \begin{landscape}
@@ -107,7 +108,7 @@ The next step in tuning of MARGE's state-space model was to tune using optimizat
 \end{enumerate}
 The first two computations were discussed in Chapter \ref{ch:sysModeling} and Section \ref{sec:wtDAQ}.
 
-One additional difference between the automated tuning here and the manual tuning method presented in Section \ref{sec:manualTuning} is that the FRFs involving the accelerometers were ignored in this section. This was because the results from the accelerometers were unreliable in a way that was infeasible to correct for in an automated way.
+One additional difference between the automated tuning here and the manual tuning method presented in Section \ref{sec:manualTuning} is that the FRFs involving the accelerometers were ignored in this section. This was because, due to the issues mentioned in Section \ref{sec:accDataPost}, the results from the accelerometers were too unreliable to use as a ground-truth for for error calculation.
 
 \subsection{Computing FRF Error} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -137,7 +138,7 @@ The tuning parameter design variables must be optimized within a bounded domain 
 
 Note that all damping ratios are constrained to be positive. Also, all of the aerodynamic multipliers are bounded between zero and one. This is because linear aerodynamics is expected to overpredict forces, and thus a multiplier less than one is expected.
 
-\begin{table}[h]
+\begin{table}[H]
 	\centering
 	\caption{Bounds of MARGE Tuning Parameter Design Variables}
 	\label{tab:optBounds}
@@ -165,32 +166,32 @@ A summary of the model properties, tuned parameters, and objective function valu
 
 \begin{landscape}
 
-\begin{table}[H]
+\begin{table}[h]
 	\centering
 	\caption{Model Tuning Optimization Results}
 	\label{tab:optResult}
-	\begin{tabular}{cccccccccc}
+	\begin{tabular}{ccccccccccc}
 		\hline\hline
-		\# & $n_s$ & $n_\text{lag}$ & $\lambda$ & $\{x_0\}$ & bounds & $\epsilon_\text{mag}(\{x\})$ & $\epsilon_\text{phase}(\{x\})$ & $F(\{x\})$ \\
+		\# & $n_s$ & $n_\text{lag}$ & $\bar{\beta}_1$ & $\bar{\beta}_2$ & $\lambda$ & $\{x_0\}$ & bounds & $\epsilon_\text{mag}(\{x\})$ & $\epsilon_\text{phase}(\{x\})$ & $F(\{x\})$ \\
 		\hline
-		1  & 2 & 0 & 1    & default value & yes & 328 & 447  & 775 \\
-		2  & 2 & 0 & 1000  & default value & yes & 282 & 519  & 8947 \\
-		3  & 2 & 0 & 0.001 & default value & yes & 355 & 438  & 1386 \\
-		4  & 2 & 0 & 1    & manual tune   & yes & 324 & 451  & 775 \\
-		5  & 2 & 0 & 1000  & manual tune   & yes & 282 & 519  & 8947 \\
-		6  & 2 & 0 & 0.001 & manual tune   & yes & 358 & 416  & 1317 \\
-		7  & 2 & 0 & 1    & manual tune   & no  & 200 & 443  & 644 \\
-		8  & 2 & 0 & 1000  & manual tune   & no  & 100 & 1354 & 3209 \\
-		9  & 2 & 0 & 0.001 & manual tune   & no  & 727 & 419  & 1326 \\
-		10 & 5 & 0 & 1    & manual tune   & no  & 164 & 417  & 581 \\
-		11 & 5 & 0 & 1000  & manual tune   & no  & 124 & 1899 & 3986 \\
-		12 & 5 & 0 & 0.001 & manual tune   & no  & 453 & 462  & 1463 \\
-		13 & 2 & 2 & 1    & manual tune   & no  & 144 & 414  & 559 \\
-		14 & 2 & 2 & 1000  & manual tune   & no  & 104 & 1622 & 3332 \\
-		15 & 2 & 2 & 0.001 & manual tune   & no  & 230 & 371  & 1173 \\
-		16 & 5 & 2 & 1    & manual tune   & no  & 227 & 486  & 713 \\
-		17 & 5 & 2 & 1000  & manual tune   & no  & 176 & 912  & 5607 \\
-		18 & 5 & 2 & 0.001 & manual tune   & no  & 347 & 408  & 1292 \\
+		1  & 2 & 0 & & & 1    & default value & yes & 328 & 447  & 775 \\
+		2  & 2 & 0 & & & 1000  & default value & yes & 282 & 519  & 8947 \\
+		3  & 2 & 0 & & & 0.001 & default value & yes & 355 & 438  & 1386 \\
+		4  & 2 & 0 & & & 1    & manual tune   & yes & 324 & 451  & 775 \\
+		5  & 2 & 0 & & & 1000  & manual tune   & yes & 282 & 519  & 8947 \\
+		6  & 2 & 0 & & & 0.001 & manual tune   & yes & 358 & 416  & 1317 \\
+		7  & 2 & 0 & & & 1    & manual tune   & no  & 200 & 443  & 644 \\
+		8  & 2 & 0 & & & 1000  & manual tune   & no  & 100 & 1354 & 3209 \\
+		9  & 2 & 0 & & & 0.001 & manual tune   & no  & 727 & 419  & 1326 \\
+		10 & 5 & 0 & & & 1    & manual tune   & no  & 164 & 417  & 581 \\
+		11 & 5 & 0 & & & 1000  & manual tune   & no  & 124 & 1899 & 3986 \\
+		12 & 5 & 0 & & & 0.001 & manual tune   & no  & 453 & 462  & 1463 \\
+		13 & 2 & 2 & 0.2267 & 0.9067 & 1    & manual tune   & no  & 144 & 414  & 559 \\
+		14 & 2 & 2 & 0.2267 & 0.9067 & 1000  & manual tune   & no  & 104 & 1622 & 3332 \\
+		15 & 2 & 2 & 0.2267 & 0.9067 & 0.001 & manual tune   & no  & 230 & 371  & 1173 \\
+		16 & 5 & 2 & 0.2267 & 0.9067 & 1    & manual tune   & no  & 227 & 486  & 713 \\
+		17 & 5 & 2 & 0.2267 & 0.9067 & 1000  & manual tune   & no  & 176 & 912  & 5607 \\
+		18 & 5 & 2 & 0.2267 & 0.9067 & 0.001 & manual tune   & no  & 347 & 408  & 1292 \\
 		\hline\hline
 	\end{tabular}
 \end{table}

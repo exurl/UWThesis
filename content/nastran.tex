@@ -1,7 +1,7 @@
 \chapter{Finite Element Modeling}
 \label{ch:nastran}
 
-An existing finite element model (FEM) of MARGE was updated in this study using NASTRAN. The model included MARGE, the wind tunnel test section walls, and the gust vanes. This chapter describes the FEM; the updates applied to it are documented in Chapter \ref{ch:gvt}.
+An existing finite element model (FEM) of MARGE was updated in this study using NASTRAN. The model included MARGE, the wind tunnel test section walls, and the gust vanes. This chapter describes the FEM; the updates applied to it are documented in Section \ref{sec:femCorrection}.
 
 The wing structure and tail structure were each modeled as a single chain of Euler-Bernoulli beam elements along their respective spar. The wind tunnel walls were modeled as extremely rigid panels whose contribution to the structural dynamics of the FEM is negligible. The area moments of inertia and material properties of the beam elements in the finite element model are reported in Table \ref{tab:beamInertia}.
 \begin{table}[H]
@@ -19,7 +19,7 @@ The wing structure and tail structure were each modeled as a single chain of Eul
         \hline\hline
     \end{tabular}
 \end{table}
-Note that the values in Table \ref{tab:beamInertia} (and also Table \ref{tab:nastranResult}) are the final values after corrections. The values before corrections and correction process are discussed in the following chapter.
+Note that the values in Table \ref{tab:beamInertia} (and also Table \ref{tab:nastranResult}) are the final values after corrections. The values before corrections and correction process are discussed in Section \ref{sec:femCorrection}.
 
 The aerodynamic loads on the NASTRAN model are based on the doublet-lattice model (DLM) for aerodynamics. This linear aerodynamic model assumes incompressible, inviscid, irrotational flow around thin lifting surfaces. The loads on the aerodynamic panels were transferred to the structural nodes via a spline interpolation. The aerodynamic panels and structural finite elements can be seen in Fig. \ref{fig:nastranWindowFull}. Figure \ref{fig:nastranWindowClose} shows a close-up view of MARGE in the FEM. Details of the implementations and limitations of these theories can be found in the NASTRAN Aeroelastic Analysis User's Guide \cite{Siemens2020}
 

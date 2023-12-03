@@ -6,7 +6,7 @@ This chapter describes the wind-tunnel testing of MARGE and the post-processing 
 
 MARGE was tested at the University of Washington's 3x3 low-speed wind tunnel at six flight conditions, $q_D=\{60,100,163,207,281,343\}$ Pa. At each flight condition, the response to each of the four inputs was tested three times. For the gust vanes, a discrete 4-degree doublet gust was generated with a frequency of 1.45 Hz (approximately equivalent to the first wing bending natural frequency). For the ailerons, a 5-degree frequency sweep from 1 Hz to 2 Hz was performed. For the elevator, a 2-degree frequency sweep from 1 Hz to 2 Hz was performed. The sweep's frequency band was chosen to encompass the first wing bending mode while staying within the bandwidth of the actuators.
 
-The exception to the above is at $q_D=343$ Pa. At this dynamic pressure, the aileron sweeps were reduced in magnitude to 3.5 degrees and the elevator sweep was reduced in magnitude to 1 degree. This was done in order to reduce the risk of damage to the model due to violent responses at high speeds. <verify with john>
+The exception to the above is at $q_D=343$ Pa. At this dynamic pressure, the aileron sweeps were reduced in magnitude to 3.5 degrees and the elevator sweep was reduced in magnitude to 1 degree. This was done in order to reduce the risk of damage to the model due to violent responses at high speeds.
 
 All of these tests were controlled and recorded using Simulink Real-Time. The testing yielded time-series data of input commands and sensor readings for each test. An example of a single run of data is shown in Fig. \ref{fig:sampleWT}
 \begin{figure}[H]
@@ -25,6 +25,7 @@ The time-domain data was post-processed in a similar way as was done for the GVT
 This single concatenated time-domain signal was then buffered into overlapping Hann windows and transformed using the CZT. The FRFs were then computing using Equation \ref{eq:frf}. The FRFs were computed from 0.4 Hz to 2.0 Hz.
 
 \subsection{Accelerometer Data Postprocessing} %%%%%%%%%%%%%%%%%
+\label{sec:accDataPost}
 
 The output of the accelerometers contained significant noise and potentially contained electrical interference from other components in MARGE. Thus, the uncertainty in FRFs between inputs and the accelerometers was high. This was compensated for by specifically filtering the time-series signal from accelerometers before other postprocessing and limiting the bandwidth of the FRFs produced to within a range in which the accelerometers tend to behave more consistently.
 %The shortcomings in the hardware of MARGE, including the accelerometers, will be discussed further in Section \ref{sec:shortcomings}.
