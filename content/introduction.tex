@@ -23,23 +23,39 @@
 
 Active aeroservoelastic control is a key tool in the pursuit of increased aircraft performance. Applications of active control include ride comfort improvement (\cite{Jones1979}), maneuver load alleviation (\cite{Sensburg1982}), gust load alleviation (\cite{Nissim1976}), and flutter suppression (\cite{Livne2018}). Such technologies can result in reduced structural weight, increased passenger comfort, or improved handling qualities, all of which lead to a higher performance aircraft.
 
-Determination of the aircraft's mathematical model is a prerequisite to designing these aeroservoelastic control laws. The mathematical model must capture the relevant physics of the aircraft in order for the control laws designed around it to function properly when implemented. These mathematical models can be determined using analytical modeling, experimental data, or both.
+Determination of the aircraft's mathematical model is a prerequisite to designing these aeroservoelastic control laws. The mathematical model must capture the relevant physics of the aircraft in order for the control laws designed around it to function properly when implemented. These mathematical models can be conceived with analytical modeling, experimental data, or both.
 
-System identification from experimental data can be done via black-box system identification (where the mathematical model's structure is arbitrary) or grey-box system identification (where the mathematical model's structure is pre-determined). Unlike mathematical models from black-box system identification, physics-based grey-box mathematical models are capable of generalizing to conditions outside of those from which they were derived. Such a generalizable mathematical model is desirable for aeroservoelastic systems because it expands the validity of the model to flight conditions outside of those it was explicitly tested in, significantly reducing the cost of testing in order to cover all relevant flight conditions.
+System identification from experimental data can be done via black-box system identification (where the mathematical model's structure is arbitrary) or grey-box system identification (where the mathematical model's structure is pre-determined). Unlike mathematical models from black-box system identification, physics-based grey-box mathematical models are capable of generalizing to conditions outside of those from which they were derived. Such a generalizable mathematical model is desirable for aeroservoelastic systems because it expands the validity of the model to flight conditions outside of those it was explicitly tested in, significantly reducing the cost of testing in order to cover all relevant flight conditions. Furthermore, it enables the prediction of the onset of flutter without undertaking risky flutter testing.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Contribution}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This thesis describes the modeling methods and experimental validation work performed to synthesize one such grey-box aeroservoelastic mathematical model for a wind tunnel model named MARGE \cite{Quenzer2019}. The mathematical model takes the form of a linear, time-invariant state-space equation which is amenable for use in the design of aeroservoelastic flight control laws. This mathematical model is based on both analytical modeling and experimental data. The experiments performed include ground vibration testing and wind tunnel testing. The analytical model is augmented using the experimental data to better match the behavior of the wind tunnel model.
+This thesis describes the modeling methods and experimental validation work performed to synthesize one such grey-box aeroservoelastic mathematical model for a wind tunnel model named MARGE. The mathematical model takes the form of a linear, time-invariant state-space equation which is amenable for use in the design of aeroservoelastic flight control laws. This mathematical model is based on both analytical modeling and experimental data.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section{Prior Work} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%Refer to documents from Eli's review papers.
-%
-%Talk about MARGE Quenzer 2019.
+The experiments performed include ground vibration testing and wind tunnel testing. The modal testing was used to obtain modal frequencies and damping ratios which were used to update a finite-element model. The wind tunnel testing was used to refine the state-space model by applying corrections to the linear physics models. These refinements minimized the error between the response of the mathematical model and that of the experimental data using numerical optimization.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Prior Work} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Experimental Finite-Element Model Update} %%%%%%%%%%
+
+There is a significant body of existing work in generating, updating, and validating finite-element models using experimental data from ground vibration testing. Finite-element model updating is often posed as an optimization problem in which certain parameters of the model (such as mass distribution, element stiffness, etc.) are adjusted to minimize the error between the solution (either modal or static) of the finite-element model and the equivalent experimental result. \cite{Chen1980} and \cite{Pak2023} are examples of such studies.
+
+While slight inaccuracies in the parameters of the finite-element model can be corrected using automated processes like optimization, deficiencies in the configuration or mechanisms modeled cannot be robustly accounted for by optimizing parameters alone. The nuances of different types of finite-element model inaccuracy and how to address them are described in \cite{Chen2001}.
+
+Production aerospace systems generally require experimentally-validated finite-element models. Thus, there are commerical software packages which are dedicated to performing this task (\cite{LMSTestLab2004},\cite{STARsite}). Such software packages are capable of identifying the input-output response from ground vibration testing and isolating dynamic modes from noisy data (\cite{Peeters2004}).
+
+\subsection{Aeroelastic Modeling} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Various fidelity mathematical models of aeroelastic systems have been studied over the years. One of the earliest models of aeroelastic systems is Theodorsen's analytical solution for the oscillating two-dimensional airfoil with flap, which is an unsteady extension thin airfoil theory (\cite{Theodorsen1949}).
+
+A more general three-dimensional aerodynamic solution for general configurations is doubulet-lattice aerodynamics, which is itself an unsteady extension of vortex-lattice aerodynamics (\cite{Albano1969}). Thus, this is a linear aerodynamic model which assumes thin airfoils and irrotational, incompressible flow. This aerodynamic model can be coupled to a linear structural model (such as a finite-element model) in order to obtain aerodynamic loadings for the aeroelastic model.
+
+This linear modeling is what is often used in practical modeling of real systems. For example, \cite{Vartio2005} and \cite{Penning2009} use such models for mathematical modeling of a wind tunnel model of an actively-controlled flexible aircraft. These models are corrected with ground vibration testing (\cite{Bartley-Cho2008}) and wind tunnel input-output response data (\cite{Vartio2008}) to increase the accuracy of the response.
+
+For even higher fidelity modeling, the Reynolds-averaged Navier-Stokes equations can be solved over the spatial and temporal domain to obtain the loading for the aeroelastic system. This method of modaling can  more accurately capture nonlinear effects such as flow separation, large deformations, and flow around airfoils of . This is the method used in \cite{Argaman2019} to develop a mathematical model of a flexible wind tunnel model which can be used to predict flutter.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Organization} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
