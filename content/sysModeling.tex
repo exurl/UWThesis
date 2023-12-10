@@ -97,7 +97,7 @@ It is assumed that the dynamics of the control modes are completely determined b
     % \end{bmatrix} \frac{w_G}{U}
 \end{multline}
 
-Note that since the control modes are rigid-body modes, they have no stiffness and the equations of motion further simplify to
+Note that since the control modes are rigid-body modes, they have no stiffess, and the equations of motion further simplify to
 \begin{multline}
 	\label{eq:EOM}
     \left( s^2 \begin{bmatrix}
@@ -280,7 +280,7 @@ With the lag states defined, Eq.\ref{eq:EOMcoupled} can now be rewritten as
 	\\
 	= - \left( s^2 \left[\bar{\bar{M}}_{sc}\right] + s \left[\bar{\bar{C}}_{sc}\right] + \left[\bar{\bar{K}}_{sc}\right] \right) \begin{Bmatrix} q_c(s) \end{Bmatrix}
 \end{multline}
-The sum of lag states can be simplifed introducing the matrix $[I_r]$ such that
+The sum of lag states can be simplified by introducing the matrix $[I_r]$ such that
 \begin{align}
 	\{r_1\} + \dots + \{r_{N_\text{lag}}\}
 	&= \begin{bmatrix} [I] & \dots & [I] \end{bmatrix} \begin{Bmatrix} \{r_1\} \\ \vdots \\ \{r_{N_\text{lag}}\} \end{Bmatrix} = [I_r] \{r\}
@@ -483,14 +483,14 @@ In a similar fashion as in Eq. \ref{eq:positionOut}, this DOF's load can be expr
 	\psi^i &= \begin{bmatrix} \psi_1^i & \dots & \psi_{n_s}^i \end{bmatrix} [T_\text{disp}] \{x_p(t)\}
 \end{align}
 
-Given this load, the strain due to bending is deteremined using the following relation from Euler-Bernoulli linear beam theory:
+Given this load, the strain due to bending is determined using the following relation from Euler-Bernoulli linear beam theory:
 \begin{align}
 	\label{eq:beamTheory}
 	\varepsilon_{y} &= -\frac{M_x \cdot z}{I_{zz} \cdot E}
 \end{align}
-where $\varepsilon_y$ is the strain, $M_x$ is the bending moment (from the relevant DOF of $\{L\}$), $z$ is the $z$-distance of the sensor from the elastic axis of the beam, $I_{zz}$ is the $z$-axis area moment of inertia, and $E$ is the modulus of elasticity. Although the axial load in the $y$-direction would also add to the strain output, its effect is negligible compared to that of bending. This is especially true because the axial y-stress at rest due to the weight of the model is tared out at before tests. Thus, its effect has been ommitted in modeling.
+where $\varepsilon_y$ is the strain, $M_x$ is the bending moment (from the relevant DOF of $\{L\}$), $z$ is the $z$-distance of the sensor from the elastic axis of the beam, $I_{zz}$ is the $z$-axis area moment of inertia, and $E$ is the modulus of elasticity. Although the axial load in the $y$-direction would also add to the strain output, its effect is negligible compared to that of bending. This is especially true because the axial y-stress at rest due to the weight of the model is tared out before tests. Thus, its effect has been omitted in modeling.
 
-The strain gauge on MARGE is mounted on the lower surface of the rectangular cross-sectioned wing spar.  Thus, $z$ is equal to negative one half of the spar thickness $t$:
+The strain gauge on MARGE is mounted on the lower surface of the rectangular cross-sectioned wing spar.  Thus, $z$ is equal to negative one-half of the spar thickness $t$:
 \begin{align}
 	\varepsilon_{y} &= -\frac{M_x \cdot (-t/2)}{I_{zz} \cdot E}
 \end{align}
@@ -517,7 +517,7 @@ Thus, the full expression for the plant output of MARGE is
 		0 \\ 0 \\ 0
 	\end{bmatrix}  \{u_p\}
 \end{align}
-Thus, the plant output of MARGE has been derived the form that is desired
+Thus, the plant output of MARGE has been derived in the form that is desired
 \begin{align}
 	\{y_p\} &= [C_p] \{x_p\} + [D_p] \{u_p\}
 \end{align}

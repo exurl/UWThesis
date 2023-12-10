@@ -15,7 +15,7 @@ This section describes the GVT setup and procedure.
 \subsection{Test Setup}
 %---------------------------------------------------------------
 
-The equipment used for the test include:
+The equipment used for the test includes:
 \begin{itemize}
     \item PCB Piezotronics ICP Impact Hammer Model 086C03
     \item PCB Piezotronics ICP Accelerometer Model 352C22
@@ -31,13 +31,13 @@ The accelerometers were mounted in locations such that all of the flexible natur
     \label{fig:accelPlacement}
 \end{figure}
 
-For the second dataset, pairs of accelerometers on the wing located a short distance apart chordwise were also treated as a fictional third accelerometer by taking the difference of their signals. This was done to simulate a sensor observing only torsional modes of the wing.
+For the second dataset, pairs of accelerometers on the wing located a short distance apart chordwise were also treated as a fictional third accelerometer by taking the difference of their signals. This was done to simulate a sensor observing only the torsional modes of the wing.
 
 %---------------------------------------------------------------
 \subsection{Test Procedure}
 %---------------------------------------------------------------
 
-Tests were performed by executing a MATLAB script which would prompt the user to name and record data. After data acquisition for a run the script automatically searched for the moment of impact generated a plot of the full time-series as well as a magnified plot of the time-series data around the impact. This magnified view was used to inspect for double-hits from the impact hammer. The script also automatically rejected data which was of insufficient length or which had too weak or strong of an impact from the hammer.
+Tests were performed by executing a MATLAB script which would prompt the user to name and record data. After data acquisition for a run the script automatically generated a plot of the full time-series as well as a magnified plot of the time-series data around the moment of impact. This magnified view was used to inspect for double hits from the impact hammer. The script also automatically rejected data which was of insufficient length or which had too weak or strong of an impact from the hammer.
 
 After accelerometers were mounted to MARGE and the DAQ was connected to the host computer, the following procedure was used for each run of GVT:
 \begin{enumerate}
@@ -96,7 +96,7 @@ Three possible ways to estimate the FRF from the above are the $H_1$ FRF, the $H
     \label{eq:frf}
     FRF_{H_v}(\omega) &= \sqrt{FRF_{H_1}(\omega) \cdot FRF_{H_2}(\omega)}
 \end{align}
-The $H_1$ estimate tends to under-estimate the FRF when there is noise in the input, while the $H_2$ estimate tends to over-estimate the FRF when there is noise at the output \cite{Tischler2012}. The $H_v$ estimate of the FRF is thus used in this study as a conservative choice which makes no assumption of the source or nature of noise in the system. (Subsequent references to the FRF can be assumed to refer to the $H_v$ FRF.)
+The $H_1$ estimate tends to underestimate the FRF when there is noise in the input, while the $H_2$ estimate tends to overestimate the FRF when there is noise at the output \cite{Tischler2012}. The $H_v$ estimate of the FRF is thus used in this study as a conservative choice which makes no assumption of the source or nature of noise in the system. (Subsequent references to the FRF can be assumed to refer to the $H_v$ FRF.)
 
 The coherence can also be computed as
 \begin{align}
@@ -129,7 +129,7 @@ These experimental natural frequencies were compared to those predicted by the N
 
 In some cases, there were clear natural modes visible in the experimental data that were not predicted by the NASTRAN finite-element model. It was inferred that two of these natural modes appeared in that these were torsional modes of the wing, because the FRFs they appeared most prominently in were from the aforementioned ``fictional'' accelerometers which had manipulated signals to enhance the response to torsional modes. These torsional modes were not predicted by the preliminary NASTRAN finite-element model; this was corrected in the subsequent FEM tuning process.
 
-Each experimental natural frequency $\omega_n$ was then measured in an automated way: first, all FRFs with a local maximum magnitude at $\omega_n$ which was at least twice the magnitude of its surroundings was identified. The median of all of these measured natural frequencies, each from a different FRF, was then taken to be the true experimental natural frequency for that nautral mode.
+Each experimental natural frequency $\omega_n$ was then measured in an automated way: first, all FRFs with a local maximum magnitude at $\omega_n$ which was at least twice the magnitude of its surroundings was identified. The median of all of these measured natural frequencies, each from a different FRF, was then taken to be the true experimental natural frequency for that natural mode.
 
 %---------------------------------------------------------------
 \subsection{Computing Damping Ratios}

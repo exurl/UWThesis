@@ -1,7 +1,7 @@
 \chapter{Model Tuning and Results}
 \label{ch:tuning}
 
-The state-space model generated in Chapter \ref{ch:sysModeling} was adjusted such that its frequency response fit the experimental frequency response. This was done by adjusting certain parameters in the model that each represented some uncertainty in the model's physical characteristics. This adjustment was first done by hand, and then repeated in a automated process through optimization.
+The state-space model generated in Chapter \ref{ch:sysModeling} was adjusted such that its frequency response fit the experimental frequency response. This was done by adjusting certain parameters in the model that each represented some uncertainty in the model's physical characteristics. This adjustment was first done by hand, and then repeated in an automated process through optimization.
 
 For this chapter, unless otherwise indicated, the state-space model was generated using $n_s=2$ structural dynamic modes and $n_\text{lag}=0$ lag terms in the Roger Approximation. This was done in order to obtain a low-order model which still could accurately capture the dynamics at low frequencies, such as those in the bandwidth of the actuators.
 
@@ -12,7 +12,7 @@ For this chapter, unless otherwise indicated, the state-space model was generate
 
 The state-space model derived in Chapter \ref{ch:sysModeling} assumes linear structural dynamics, linear aerodynamics, and thin airfoils. It also requires perfect knowledge of mode shapes. In reality, MARGE does not conform to any of these assumptions perfectly. Thus, tuning parameters were implemented in the state-space model generation script which adjusted the structural and aerodynamic modeling to compensate for these nonlinearities and inaccuracies.
 
-The first tuning parameter is the first wing bending natural frequency $\omega_{n2}$. This quantity has a low uncertainty, but was treated as a tuning parameter for purposes of investigation.
+The first tuning parameter is the first wing bending natural frequency $\omega_{n2}$. This quantity has a low uncertainty but was treated as a tuning parameter for purposes of investigation.
 
 The next tuning parameters are the damping ratios $\zeta$ for the modes. These have higher uncertainty since viscous damping is not the most physically accurate model for structural damping. Furthermore, aerodynamic damping of motions is not accounted for in the model. These can be compensated for by adjusting the damping ratios of the modes to capture all the mechanisms of damping in one place.
 
@@ -60,7 +60,7 @@ Note that Table \ref{tab:tuningParams} applies for the case of $n_s=2$ structura
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:manualTuning}
 
-The first step in tuning the model was experimenting with manually tuning the parameters with the goal of closing the gap between the model's FRF and the experimental FRF at a single airspeed ($q_D=207$). This was done by thinking intuitively about the modeling uncertainties which are most likely effecting the known discrepancies in the FRFs. For example, it was known that linear aerodynamics would overpredict the control surface effectiveness by up to 50\% even in reasonably small ($<10^\circ$) deflections \cite{Young1947,Riebe1955}. Thus, the control effectiveness of the ailerons and elevator were lowered until the FRFs with these controls as inputs better matched the experimental FRFs in magnitude.
+The first step in tuning the model was experimenting with manually tuning the parameters with the goal of closing the gap between the model's FRF and the experimental FRF at a single airspeed ($q_D=207$). This was done by thinking intuitively about the modeling uncertainties which are most likely affecting the known discrepancies in the FRFs. For example, it was known that linear aerodynamics would overpredict the control surface effectiveness by up to 50\% even in reasonably small ($<10^\circ$) deflections \cite{Young1947,Riebe1955}. Thus, the control effectiveness of the ailerons and elevator were lowered until the FRFs with these controls as inputs better matched the experimental FRFs in magnitude.
 
 The resultant parameters and FRF comparison of the manually tuned model are shown below in Table \ref{tab:manualTuning} and Fig. \ref{fig:manualTunedFRF}. The poor alignment between the model and experiment in Fig \ref{fig:manualTunedFRF} indicates that the simple and ``intuitive'' manual tuning is not sufficient to completely match the experiment.
 \begin{table}[h]
@@ -100,7 +100,7 @@ The resultant parameters and FRF comparison of the manually tuned model are show
 \section{Model Optimization} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The next step in tuning of MARGE's state-space model was to tune using optimization. Using MATLAB's \verb|fmincon| function, gradient-based optimization was used minimize the error between the model's FRFs and the experimental FRFs at all airspeeds by adjusting the tuning parameter design variables $\{x\}$ which contains the parameters listed in Table \ref{tab:tuningParams}. In order to do this, an objective function was written which would perform the following computations:
+The next step in tuning of MARGE's state-space model was to tune using optimization. Using MATLAB's \verb|fmincon| function, gradient-based optimization was used to minimize the error between the model's FRFs and the experimental FRFs at all airspeeds by adjusting the tuning parameter design variables $\{x\}$ which contains the parameters listed in Table \ref{tab:tuningParams}. In order to do this, an objective function was written which would perform the following computations:
 \begin{enumerate}
 	\item generate MARGE's state-space model
 	\item compute FRFs of the state-space model
@@ -108,7 +108,7 @@ The next step in tuning of MARGE's state-space model was to tune using optimizat
 \end{enumerate}
 The first two computations were discussed in Chapter \ref{ch:sysModeling} and Section \ref{sec:wtDAQ}.
 
-One additional difference between the automated tuning here and the manual tuning method presented in Section \ref{sec:manualTuning} is that the FRFs involving the accelerometers were ignored in this section. This was because, due to the issues mentioned in Section \ref{sec:accDataPost}, the results from the accelerometers were too unreliable to use as a ground-truth for for error calculation.
+One additional difference between the automated tuning here and the manual tuning method presented in Section \ref{sec:manualTuning} is that the FRFs involving the accelerometers were ignored in this section. This was because, due to the issues mentioned in Section \ref{sec:accDataPost}, the results from the accelerometers were too unreliable to use as a ground-truth for error calculation.
 
 \subsection{Computing FRF Error} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -128,7 +128,7 @@ The magnitude and phase errors are then combined in a weighted sum to create the
 \begin{align}
 	f_{ij}(\{x\}) &= \epsilon_{ij \, \text{mag}}(\{x\}) \sqrt{\lambda} + \epsilon_{ij \, \text{phase}}(\{x\}) \frac{1}{\sqrt{\lambda}}
 \end{align}
-Finally the errors $f$ for each FRF (corresponding to input-output pairs) are summed to create a total error $F$ for MARGE. This is the objective function that the optimization algorithm minimizes.
+Finally, the errors $f$ for each FRF (corresponding to input-output pairs) are summed to create a total error $F$ for MARGE. This is the objective function that the optimization algorithm minimizes.
 \begin{align}
 	F(\{x\}) &= \sum_{i=1}^{N_\text{in}} \sum_{j=1}^{N_\text{out}} f_{ij}(\{x\})
 \end{align}
@@ -217,7 +217,7 @@ A summary of the model properties, tuned parameters, and objective function valu
 
 \end{landscape}
 
-In general, as the model increases in size and constraints are loosened, the model optimization is capable of achieving a better result. One notable exception is the difference between the 13th and 16th optimization run. In Table \ref{tab:optResult}, it can be seen that the increase from $n_s=2$ to $n_s=5$. Although the 16th run encodes more detailed dynamics with its five mode shapes, the inaccuracy of the mode shapes of the higher-frequency modes may have decreased this model's accuracy.
+In general, as the model increases in size and constraints are loosened, the model optimization is capable of achieving a better result. One notable exception is the difference between the 13th and 16th optimization runs. In Table \ref{tab:optResult}, it can be seen that the increase from $n_s=2$ to $n_s=5$. Although the 16th run encodes more detailed dynamics with its five mode shapes, the inaccuracy of the mode shapes of the higher-frequency modes may have decreased this model's accuracy.
 
 Optimization runs 3 and 6 differ only in their initial conditions. However, the runs reach different solutions, with one achieving a lower objective function than the other. This indicates that the objective function may have local minima which prevent the gradient-based optimization algorithm from reaching the true optimal solution.
 
